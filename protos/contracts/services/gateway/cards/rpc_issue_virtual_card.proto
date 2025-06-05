@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package contracts.services.gateway.cards;
+
+import "contracts/services/cards/card.proto";
+
+message IssueVirtualCardRequest {
+  string user_id = 1;
+  string account_id = 2;
+}
+
+message IssueVirtualCardResponse {
+  contracts.services.cards.Card card = 1;
+}

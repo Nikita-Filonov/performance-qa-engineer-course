@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package contracts.services.gateway.accounts;
+
+import "contracts/services/cards/card.proto";
+import "contracts/services/accounts/account.proto";
+
+message AccountView {
+  contracts.services.accounts.Account account = 1;
+  repeated contracts.services.cards.Card cards = 2;
+}

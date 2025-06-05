@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package contracts.services.payments;
+
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_AUTHORIZED = 1;
+  PAYMENT_STATUS_CAPTURED = 2;
+  PAYMENT_STATUS_REFUNDED = 3;
+  PAYMENT_STATUS_DECLINED = 4;
+  PAYMENT_STATUS_FAILED = 5;
+}
+
+enum PaymentSystem {
+  PAYMENT_SYSTEM_UNSPECIFIED = 0;
+  PAYMENT_SYSTEM_MASTERCARD = 1;
+  PAYMENT_SYSTEM_VISA = 2;
+}
+
+message Payment {
+  string id = 1;
+  PaymentStatus status = 2;
+  PaymentSystem system = 3;
+  string message = 4;
+}

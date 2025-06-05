@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package contracts.services.accounts;
+
+import "contracts/services/accounts/rpc_get_account.proto";
+import "contracts/services/accounts/rpc_get_accounts.proto";
+import "contracts/services/accounts/rpc_create_account.proto";
+import "contracts/services/accounts/rpc_update_account_balance.proto";
+
+service AccountsService {
+  rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
+  rpc GetAccounts (GetAccountsRequest) returns (GetAccountsResponse);
+  rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse);
+  rpc UpdateAccountBalance (UpdateAccountBalanceRequest) returns (UpdateAccountBalanceResponse);
+}
+

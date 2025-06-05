@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package contracts.services.gateway.documents;
+
+import "contracts/services/gateway/documents/rpc_get_tariff_document.proto";
+import "contracts/services/gateway/documents/rpc_get_contract_document.proto";
+
+service DocumentsGatewayService {
+  rpc GetTariffDocument (GetTariffDocumentRequest) returns (GetTariffDocumentResponse);
+  rpc GetContractDocument (GetContractDocumentRequest) returns (GetContractDocumentResponse);
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package contracts.services.payments;
+
+import "contracts/services/payments/payment.proto";
+
+message AuthorizePaymentRequest {
+  string cvv = 1;
+  double amount = 2;
+  PaymentSystem system = 3;
+  string expiry_date = 4;
+  string card_number = 5;
+  string card_holder = 6;
+}
+
+message AuthorizePaymentResponse {
+  Payment payment = 1;
+}

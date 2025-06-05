@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package contracts.services.operations;
+
+message OperationsSummary {
+  float spent_amount = 1;
+  float received_amount = 2;
+  float cashback_amount = 3;
+}

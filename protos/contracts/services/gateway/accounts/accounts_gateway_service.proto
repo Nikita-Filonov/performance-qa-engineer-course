@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package contracts.services.gateway.accounts;
+
+import "contracts/services/gateway/accounts/rpc_get_accounts.proto";
+import "contracts/services/gateway/accounts/rpc_open_deposit_account.proto";
+import "contracts/services/gateway/accounts/rpc_open_savings_account.proto";
+import "contracts/services/gateway/accounts/rpc_open_debit_card_account.proto";
+import "contracts/services/gateway/accounts/rpc_open_credit_card_account.proto";
+
+service AccountsGatewayService {
+  rpc GetAccounts (GetAccountsRequest) returns (GetAccountsResponse);
+  rpc OpenDepositAccount (OpenDepositAccountRequest) returns (OpenDepositAccountResponse);
+  rpc OpenSavingsAccount (OpenSavingsAccountRequest) returns (OpenSavingsAccountResponse);
+  rpc OpenDebitCardAccount (OpenDebitCardAccountRequest) returns (OpenDebitCardAccountResponse);
+  rpc OpenCreditCardAccount (OpenCreditCardAccountRequest) returns (OpenCreditCardAccountResponse);
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.users;
+
+import "contracts/services/users/user.proto";
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}

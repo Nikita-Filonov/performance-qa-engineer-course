@@ -1,0 +1,228 @@
+version: '3.9'
+
+x-base-service: &base-service
+  build:
+    context: .
+  volumes:
+    - .:/app
+  working_dir: /app
+
+x-python-service: &python-service
+  <<: *base-service
+  entrypoint: [ "python", "-u", "-m" ]
+
+services:
+  # minio
+  minio:
+    image: minio/minio
+    ports:
+      - "3000:9000"
+      - "3001:9001"
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    container_name: minio
+
+  # redis
+  redis:
+    image: redis:7-alpine
+    ports: [ "6379:6379" ]
+    command: [ "redis-server", "--requirepass", "redisadmin" ]
+    container_name: redis
+
+  # postgres
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U root
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    container_name: postgres
+
+  postgres-init:
+    image: postgres:15
+    volumes:
+      - ./scripts:/scripts
+      - ./migrations/postgres:/docker-entrypoint-initdb.d
+    command: [ "bash", "./scripts/postgres.sh" ]
+    depends_on:
+      - postgres
+    environment:
+      PGPASSWORD: root
+    container_name: postgres-init
+
+  postgres-admin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgresadmin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: postgresadmin
+    container_name: postgres-admin
+
+  postgres-migrator-users:
+    <<: *base-service
+    command: [ "alembic", "-c", "services/users/alembic.ini", "upgrade", "head" ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-init:
+        condition: service_completed_successfully
+    container_name: "postgres-migrator-users"
+
+  postgres-migrator-cards:
+    <<: *base-service
+    command: [ "alembic", "-c", "services/cards/alembic.ini", "upgrade", "head" ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-init:
+        condition: service_completed_successfully
+    container_name: "postgres-migrator-cards"
+
+  postgres-migrator-accounts:
+    <<: *base-service
+    command: [ "alembic", "-c", "services/accounts/alembic.ini", "upgrade", "head" ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-init:
+        condition: service_completed_successfully
+    container_name: "postgres-migrator-accounts"
+
+  postgres-migrator-operations:
+    <<: *base-service
+    command: [ "alembic", "-c", "services/operations/alembic.ini", "upgrade", "head" ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-init:
+        condition: service_completed_successfully
+    container_name: "postgres-migrator-operations"
+
+  # grafana
+  grafana:
+    image: grafana/grafana
+    ports: [ "3002:3000" ]
+    restart: always
+    volumes: [ "grafana-data:/var/lib/grafana" ]
+    environment:
+      - GF_SECURITY_ADMIN_USER=grafanaadmin
+      - GF_SECURITY_ADMIN_PASSWORD=grafanaadmin
+    container_name: grafana
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    ports: [ "8080:8080" ]
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    container_name: cadvisor
+
+  prometheus:
+    image: prom/prometheus
+    ports: [ "9090:9090" ]
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
+    container_name: prometheus
+
+  # users-service
+  http-users:
+    <<: *python-service
+    ports: [ "8001:8001" ]
+    command: "services.users.server.http"
+    container_name: "http-users"
+
+  grpc-users:
+    <<: *python-service
+    ports: [ "9001:9001" ]
+    command: "services.users.server.grpc"
+    container_name: "grpc-users"
+
+  # cards-service
+  http-cards:
+    <<: *python-service
+    ports: [ "8002:8002" ]
+    command: "services.cards.server.http"
+    container_name: "http-cards"
+
+  grpc-cards:
+    <<: *python-service
+    ports: [ "9002:9002" ]
+    command: "services.cards.server.grpc"
+    container_name: "grpc-cards"
+
+  # gateway-services
+  http-gateway:
+    <<: *python-service
+    ports: [ "8003:8003" ]
+    command: "services.gateway.server.http"
+    container_name: "http-gateway"
+
+  grpc-gateway:
+    <<: *python-service
+    ports: [ "9003:9003" ]
+    command: "services.gateway.server.grpc"
+    container_name: "grpc-gateway"
+
+  # accounts-service
+  http-accounts:
+    <<: *python-service
+    ports: [ "8004:8004" ]
+    command: "services.accounts.server.http"
+    container_name: "http-accounts"
+
+  grpc-accounts:
+    <<: *python-service
+    ports: [ "9004:9004" ]
+    command: "services.accounts.server.grpc"
+    container_name: "grpc-accounts"
+
+  # documents-services
+  http-documents:
+    <<: *python-service
+    ports: [ "8005:8005" ]
+    command: "services.documents.server.http"
+    container_name: "http-documents"
+
+  grpc-documents:
+    <<: *python-service
+    ports: [ "9005:9005" ]
+    command: "services.documents.server.grpc"
+    container_name: "grpc-documents"
+
+  # operations-service
+  http-operations:
+    <<: *python-service
+    ports: [ "8006:8006" ]
+    command: "services.operations.server.http"
+    container_name: "http-operations"
+
+  grpc-operations:
+    <<: *python-service
+    ports: [ "9006:9006" ]
+    command: "services.operations.server.grpc"
+    container_name: "grpc-operations"
+
+volumes:
+  pgdata:
+  grafana-data:

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package contracts.services.payments;
+
+import "contracts/services/payments/payment.proto";
+
+message RefundPaymentRequest {
+  double amount = 1;
+  PaymentSystem system = 2;
+  string payment_id = 3;
+}
+
+message RefundPaymentResponse {
+  Payment payment = 1;
+}

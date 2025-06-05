@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package contracts.services.documents.tariffs;
+
+import "contracts/services/documents/tariffs/rpc_get_tariff.proto";
+import "contracts/services/documents/tariffs/rpc_create_tariff.proto";
+
+service TariffsService {
+  rpc GetTariff (GetTariffRequest) returns (GetTariffResponse);
+  rpc CreateTariff (CreateTariffRequest) returns (CreateTariffResponse);
+}
+

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package contracts.services.accounts;
+
+import "contracts/services/accounts/account.proto";
+
+message CreateAccountRequest {
+  AccountType type = 2;
+  AccountStatus status = 3;
+  string user_id = 4;
+  float balance = 5;
+}
+
+message CreateAccountResponse {
+  Account account = 1;
+}

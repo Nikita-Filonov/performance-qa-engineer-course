@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.gateway.accounts;
+
+import "contracts/services/gateway/accounts/account.proto";
+
+message OpenDepositAccountRequest {
+  string user_id = 1;
+}
+
+message OpenDepositAccountResponse {
+  AccountView account = 1;
+}

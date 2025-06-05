@@ -1,0 +1,1 @@
+from services.accounts.services.postgres.models.accounts import AccountsModel

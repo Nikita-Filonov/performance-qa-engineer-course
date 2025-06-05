@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package contracts.services.gateway.users;
+
+import "contracts/services/gateway/users/rpc_get_user.proto";
+import "contracts/services/gateway/users/rpc_create_user.proto";
+
+service UsersGatewayService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+}

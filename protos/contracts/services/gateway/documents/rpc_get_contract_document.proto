@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.gateway.documents;
+
+import "contracts/services/documents/contracts/contract.proto";
+
+message GetContractDocumentRequest {
+  string account_id = 1;
+}
+
+message GetContractDocumentResponse {
+  contracts.services.documents.contracts.Contract contract = 1;
+}

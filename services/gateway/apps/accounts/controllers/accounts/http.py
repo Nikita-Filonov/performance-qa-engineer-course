@@ -1,0 +1,173 @@
+import uuid
+
+from fastapi import HTTPException
+
+from libs.faker import fake
+from services.accounts.clients.accounts.http import AccountsHTTPClient
+from services.cards.apps.cards.schema.cards import CardSchema
+from services.cards.clients.cards.http import CardsHTTPClient
+from services.documents.clients.contracts.http import ContractsHTTPClient
+from services.documents.clients.tariffs.http import TariffsHTTPClient
+from services.gateway.apps.accounts.schema.accounts import (
+    AccountViewSchema,
+    GetAccountsQuerySchema,
+    GetAccountsResponseSchema,
+    OpenSavingsAccountRequestSchema,
+    OpenSavingsAccountResponseSchema,
+    OpenDepositAccountRequestSchema,
+    OpenDepositAccountResponseSchema,
+    OpenDebitCardAccountRequestSchema,
+    OpenDebitCardAccountResponseSchema,
+    OpenCreditCardAccountRequestSchema,
+    OpenCreditCardAccountResponseSchema
+)
+from services.users.clients.users.http import UsersHTTPClient, UsersHTTPClientError
+
+
+async def get_accounts(
+        query: GetAccountsQuerySchema,
+        cards_http_client: CardsHTTPClient,
+        accounts_http_client: AccountsHTTPClient
+) -> GetAccountsResponseSchema:
+    get_accounts_response = await accounts_http_client.get_accounts(user_id=query.user_id)
+
+    results: list[AccountViewSchema] = []
+    for account in get_accounts_response.accounts:
+        get_cards_response = await cards_http_client.get_cards(account.id)
+
+        results.append(AccountViewSchema(cards=get_cards_response.cards, account=account))
+
+    return GetAccountsResponseSchema(accounts=results)
+
+
+async def create_cards_for_account(
+        user_id: uuid.UUID,
+        account_id: uuid.UUID,
+        users_http_client: UsersHTTPClient,
+        cards_http_client: CardsHTTPClient,
+) -> list[CardSchema]:
+    try:
+        get_user_response = await users_http_client.get_user(user_id)
+    except UsersHTTPClientError as error:
+        raise HTTPException(
+            detail=f"Open account: {error.details}",
+            status_code=error.status_code
+        )
+
+    create_virtual_card_response = await cards_http_client.create_virtual_card(
+        last_name=get_user_response.user.last_name,
+        first_name=get_user_response.user.first_name,
+        account_id=account_id
+    )
+    create_physical_card_response = await cards_http_client.create_physical_card(
+        last_name=get_user_response.user.last_name,
+        first_name=get_user_response.user.first_name,
+        account_id=account_id
+    )
+
+    return [create_virtual_card_response.card, create_physical_card_response.card]
+
+
+async def create_documents_for_account(
+        account_id: uuid.UUID,
+        tariffs_http_client: TariffsHTTPClient,
+        contracts_http_client: ContractsHTTPClient
+):
+    await tariffs_http_client.create_tariff(
+        account_id=account_id, content=fake.sentence().encode()
+    )
+    await contracts_http_client.create_contract(
+        account_id=account_id, content=fake.sentence().encode()
+    )
+
+
+async def open_deposit_account(
+        request: OpenDepositAccountRequestSchema,
+        tariffs_http_client: TariffsHTTPClient,
+        accounts_http_client: AccountsHTTPClient,
+        contracts_http_client: ContractsHTTPClient,
+) -> OpenDepositAccountResponseSchema:
+    create_account_response = await accounts_http_client.create_deposit_account(request.user_id)
+
+    await create_documents_for_account(
+        account_id=create_account_response.account.id,
+        tariffs_http_client=tariffs_http_client,
+        contracts_http_client=contracts_http_client
+    )
+
+    return OpenDepositAccountResponseSchema(
+        account=AccountViewSchema(cards=[], account=create_account_response.account)
+    )
+
+
+async def open_savings_account(
+        request: OpenSavingsAccountRequestSchema,
+        tariffs_http_client: TariffsHTTPClient,
+        accounts_http_client: AccountsHTTPClient,
+        contracts_http_client: ContractsHTTPClient,
+) -> OpenSavingsAccountResponseSchema:
+    create_account_response = await accounts_http_client.create_savings_account(request.user_id)
+
+    await create_documents_for_account(
+        account_id=create_account_response.account.id,
+        tariffs_http_client=tariffs_http_client,
+        contracts_http_client=contracts_http_client
+    )
+
+    return OpenSavingsAccountResponseSchema(
+        account=AccountViewSchema(cards=[], account=create_account_response.account)
+    )
+
+
+async def open_debit_card_account(
+        request: OpenDebitCardAccountRequestSchema,
+        users_http_client: UsersHTTPClient,
+        cards_http_client: CardsHTTPClient,
+        tariffs_http_client: TariffsHTTPClient,
+        accounts_http_client: AccountsHTTPClient,
+        contracts_http_client: ContractsHTTPClient,
+) -> OpenDebitCardAccountResponseSchema:
+    create_account_response = await accounts_http_client.create_debit_card_account(request.user_id)
+    cards = await create_cards_for_account(
+        user_id=request.user_id,
+        account_id=create_account_response.account.id,
+        users_http_client=users_http_client,
+        cards_http_client=cards_http_client
+    )
+
+    await create_documents_for_account(
+        account_id=create_account_response.account.id,
+        tariffs_http_client=tariffs_http_client,
+        contracts_http_client=contracts_http_client
+    )
+
+    return OpenDebitCardAccountResponseSchema(
+        account=AccountViewSchema(cards=cards, account=create_account_response.account)
+    )
+
+
+async def open_credit_card_account(
+        request: OpenCreditCardAccountRequestSchema,
+        users_http_client: UsersHTTPClient,
+        cards_http_client: CardsHTTPClient,
+        tariffs_http_client: TariffsHTTPClient,
+        accounts_http_client: AccountsHTTPClient,
+        contracts_http_client: ContractsHTTPClient,
+) -> OpenCreditCardAccountResponseSchema:
+    create_account_response = await accounts_http_client.create_credit_card_account(request.user_id)
+    cards = await create_cards_for_account(
+        user_id=request.user_id,
+        account_id=create_account_response.account.id,
+        users_http_client=users_http_client,
+        cards_http_client=cards_http_client
+    )
+
+    await create_documents_for_account(
+        account_id=create_account_response.account.id,
+        tariffs_http_client=tariffs_http_client,
+        contracts_http_client=contracts_http_client
+    )
+
+    return OpenCreditCardAccountResponseSchema(
+        account=AccountViewSchema(cards=cards, account=create_account_response.account)
+    )

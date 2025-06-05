@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.gateway.operations;
+
+import "contracts/services/operations/operations_summary.proto";
+
+message GetOperationsSummaryRequest {
+  string account_id = 1;
+}
+
+message GetOperationsSummaryResponse {
+  contracts.services.operations.OperationsSummary summary = 1;
+}

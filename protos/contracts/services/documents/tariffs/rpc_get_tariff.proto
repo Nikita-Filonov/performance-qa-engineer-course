@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.documents.tariffs;
+
+import "contracts/services/documents/tariffs/tariff.proto";
+
+message GetTariffRequest {
+  string account_id = 1;
+}
+
+message GetTariffResponse {
+  Tariff tariff = 1;
+}

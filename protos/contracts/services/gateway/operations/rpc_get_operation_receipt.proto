@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.gateway.operations;
+
+import "contracts/services/operations/operation_receipt.proto";
+
+message GetOperationReceiptRequest {
+  string operation_id = 1;
+}
+
+message GetOperationReceiptResponse {
+  contracts.services.operations.OperationReceipt receipt = 1;
+}

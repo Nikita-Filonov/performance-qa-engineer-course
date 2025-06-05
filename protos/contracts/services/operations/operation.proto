@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package contracts.services.operations;
+
+enum OperationType {
+  OPERATION_TYPE_UNSPECIFIED = 0;
+  OPERATION_TYPE_FEE = 1;
+  OPERATION_TYPE_TOP_UP = 3;
+  OPERATION_TYPE_PURCHASE = 4;
+  OPERATION_TYPE_CASHBACK = 5;
+  OPERATION_TYPE_TRANSFER = 6;
+  OPERATION_TYPE_BILL_PAYMENT = 7;
+  OPERATION_TYPE_CASH_WITHDRAWAL = 8;
+}
+
+enum OperationStatus {
+  OPERATION_STATUS_UNSPECIFIED = 0;
+  OPERATION_STATUS_IN_PROGRESS = 1;
+  OPERATION_STATUS_COMPLETED = 2;
+  OPERATION_STATUS_FAILED = 3;
+}
+
+message Operation {
+  string id = 1;
+  OperationType type = 2;
+  OperationStatus status = 3;
+  double amount = 4;
+  string card_id = 5;
+  string category = 6;
+  string created_at = 7;
+  string account_id = 8;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package contracts.services.users;
+
+message User {
+  string id = 1;
+  string email = 2;
+  string last_name = 3;
+  string first_name = 4;
+  string middle_name = 5;
+  string phone_number = 6;
+}

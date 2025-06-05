@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package contracts.services.payments;
+
+import "contracts/services/payments/rpc_refund_payment.proto";
+import "contracts/services/payments/rpc_capture_payment.proto";
+import "contracts/services/payments/rpc_authorize_payment.proto";
+
+service PaymentsService {
+  rpc RefundPayment (RefundPaymentRequest) returns (RefundPaymentResponse);
+  rpc CapturePayment (CapturePaymentRequest) returns (CapturePaymentResponse);
+  rpc AuthorizePayment (AuthorizePaymentRequest) returns (AuthorizePaymentResponse);
+}
+
+
+
+

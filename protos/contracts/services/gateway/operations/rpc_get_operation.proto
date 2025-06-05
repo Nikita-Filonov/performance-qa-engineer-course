@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.gateway.operations;
+
+import "contracts/services/operations/operation.proto";
+
+message GetOperationRequest {
+  string id = 1;
+}
+
+message GetOperationResponse {
+  contracts.services.operations.Operation operation = 1;
+}

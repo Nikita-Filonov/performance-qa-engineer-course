@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.cards;
+
+import "contracts/services/cards/card.proto";
+
+message GetCardRequest {
+  string id = 1;
+}
+
+message GetCardResponse {
+  Card card = 1;
+}

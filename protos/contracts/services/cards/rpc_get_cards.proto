@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.cards;
+
+import "contracts/services/cards/card.proto";
+
+message GetCardsRequest {
+  string account_id = 1;
+}
+
+message GetCardsResponse {
+  repeated Card cards = 1;
+}

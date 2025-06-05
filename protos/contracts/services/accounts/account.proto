@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package contracts.services.accounts;
+
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  ACCOUNT_TYPE_DEBIT_CARD = 1;
+  ACCOUNT_TYPE_CREDIT_CARD = 2;
+  ACCOUNT_TYPE_DEPOSIT = 3;
+  ACCOUNT_TYPE_SAVINGS = 4;
+}
+
+enum AccountStatus {
+  ACCOUNT_STATUS_UNSPECIFIED = 0;
+  ACCOUNT_STATUS_ACTIVE = 1;
+  ACCOUNT_STATUS_PENDING_CLOSURE = 2;
+  ACCOUNT_STATUS_CLOSED = 3;
+}
+
+message Account {
+  string id = 1;
+  AccountType type = 2;
+  AccountStatus status = 3;
+  string user_id = 4;
+  double balance = 5;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package contracts.services.documents.contracts;
+
+import "contracts/services/documents/contracts/rpc_get_contract.proto";
+import "contracts/services/documents/contracts/rpc_create_contract.proto";
+
+service ContractsService {
+  rpc GetContract (GetContractRequest) returns (GetContractResponse);
+  rpc CreateContract (CreateContractRequest) returns (CreateContractResponse);
+}
+

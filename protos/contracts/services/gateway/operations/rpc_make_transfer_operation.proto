@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package contracts.services.gateway.operations;
+
+import "contracts/services/operations/operation.proto";
+
+message MakeTransferOperationRequest {
+  contracts.services.operations.OperationStatus status = 2;
+  float amount = 3;
+  string card_id = 4;
+  string account_id = 7;
+}
+
+message MakeTransferOperationResponse {
+  contracts.services.operations.Operation operation = 1;
+}

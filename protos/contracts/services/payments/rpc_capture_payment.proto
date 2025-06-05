@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package contracts.services.payments;
+
+import "contracts/services/payments/payment.proto";
+
+message CapturePaymentRequest {
+  PaymentSystem system = 1;
+  string payment_id = 2;
+}
+
+message CapturePaymentResponse {
+  Payment payment = 1;
+}

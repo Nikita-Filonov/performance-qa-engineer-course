@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package contracts.services.cards;
+
+import "contracts/services/cards/card.proto";
+
+message CreateCardRequest {
+  string pin = 1;
+  string cvv = 2;
+  CardType type = 3;
+  CardStatus status = 4;
+  string account_id = 5;
+  string card_number = 6;
+  string card_holder = 7;
+  string expiry_date = 8;
+  CardPaymentSystem payment_system = 9;
+}
+
+message CreateCardResponse {
+  Card card = 1;
+}

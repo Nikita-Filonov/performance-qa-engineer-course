@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package contracts.services.accounts;
+
+import "contracts/services/accounts/account.proto";
+
+message GetAccountsRequest {
+  string user_id = 1;
+}
+
+message GetAccountsResponse {
+  repeated Account accounts = 1;
+}

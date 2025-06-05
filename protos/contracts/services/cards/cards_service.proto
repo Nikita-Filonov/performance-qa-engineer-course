@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package contracts.services.cards;
+
+import "contracts/services/cards/rpc_get_card.proto";
+import "contracts/services/cards/rpc_get_cards.proto";
+import "contracts/services/cards/rpc_create_card.proto";
+
+service CardsService {
+  rpc GetCard (GetCardRequest) returns (GetCardResponse);
+  rpc GetCards (GetCardsRequest) returns (GetCardsResponse);
+  rpc CreateCard (CreateCardRequest) returns (CreateCardResponse);
+}
+

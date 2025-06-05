@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package contracts.services.cards;
+
+enum CardType {
+  CARD_TYPE_UNSPECIFIED = 0;
+  CARD_TYPE_VIRTUAL = 1;
+  CARD_TYPE_PHYSICAL = 2;
+}
+
+enum CardStatus {
+  CARD_STATUS_UNSPECIFIED = 0;
+  CARD_STATUS_ACTIVE = 1;
+  CARD_STATUS_FROZEN = 2;
+  CARD_STATUS_CLOSED = 3;
+  CARD_STATUS_BLOCKED = 4;
+}
+
+enum CardPaymentSystem {
+  CARD_PAYMENT_SYSTEM_UNSPECIFIED = 0;
+  CARD_PAYMENT_SYSTEM_MASTERCARD = 1;
+  CARD_PAYMENT_SYSTEM_VISA = 2;
+}
+
+message Card {
+  string id = 1;
+  string pin = 2;
+  string cvv = 3;
+  CardType type = 4;
+  CardStatus status = 5;
+  string account_id = 6;
+  string card_number = 7;
+  string card_holder = 8;
+  string expiry_date = 9;
+  CardPaymentSystem payment_system = 10;
+}
