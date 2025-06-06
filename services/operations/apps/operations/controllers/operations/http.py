@@ -87,10 +87,6 @@ async def create_operation(
 
     if authorize_payment_response.payment.status == PaymentStatus.AUTHORIZED:
         await payments_http_client.capture_payment(authorize_payment_response.payment.id)
-        await accounts_http_client.update_account_balance(
-            balance=get_account_response.account.balance + request.amount,
-            account_id=get_account_response.account.id
-        )
 
     operation = await operations_repository.create(
         CreateOperationDict(
@@ -105,6 +101,10 @@ async def create_operation(
     )
 
     if OperationStatus(operation.status).is_success():
+        await accounts_http_client.update_account_balance(
+            balance=get_account_response.account.balance + request.amount,
+            account_id=get_account_response.account.id
+        )
         await operations_s3_client.upload_operation_receipt_file(
             data=str(operation.id).encode(),
             operation_id=operation.id

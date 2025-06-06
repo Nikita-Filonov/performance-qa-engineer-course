@@ -113,10 +113,6 @@ async def create_operation(
 
     if payment.status == PaymentStatus.PAYMENT_STATUS_AUTHORIZED:
         await payments_grpc_client.capture_payment(payment.id)
-        await accounts_grpc_client.update_account_balance(
-            balance=account.balance + request.amount,
-            account_id=account.id
-        )
 
     operation = await operations_repository.create(
         CreateOperationDict(
@@ -131,6 +127,10 @@ async def create_operation(
     )
 
     if OperationStatus(operation.status).is_success():
+        await accounts_grpc_client.update_account_balance(
+            balance=account.balance + request.amount,
+            account_id=account.id
+        )
         await operations_s3_client.upload_operation_receipt_file(
             data=str(operation.id).encode(),
             operation_id=operation.id
