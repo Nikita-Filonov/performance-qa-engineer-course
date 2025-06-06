@@ -3,6 +3,7 @@ import uuid
 from grpc import StatusCode
 from grpc.aio import AioRpcError, ServicerContext
 
+from contracts.services.accounts.account_pb2 import AccountType
 from contracts.services.cards.card_pb2 import (
     Card,
     CardType as ProtoCardType,
@@ -81,6 +82,13 @@ async def create_card(
         await context.abort(
             code=error.code(),
             details=f"Create card: {error.details()}"
+        )
+
+    supported_accounts = [AccountType.ACCOUNT_TYPE_DEBIT_CARD, AccountType.ACCOUNT_TYPE_CREDIT_CARD]
+    if account.type not in supported_accounts:
+        await context.abort(
+            code=StatusCode.FAILED_PRECONDITION,
+            details=f"Create card: unsupported account type {account.type}"
         )
 
     card = await cards_repository.create(

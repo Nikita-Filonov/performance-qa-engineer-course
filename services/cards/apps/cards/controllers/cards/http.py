@@ -3,6 +3,7 @@ import uuid
 from fastapi import HTTPException, status
 
 from services.accounts.clients.accounts.http import AccountsHTTPClient, AccountsHTTPClientError
+from services.accounts.services.postgres.models.accounts import AccountType
 from services.cards.apps.cards.schema.cards import (
     CardSchema,
     GetCardResponseSchema,
@@ -48,6 +49,13 @@ async def create_card(
         raise HTTPException(
             detail=f"Create card: {error.details}",
             status_code=error.status_code
+        )
+
+    supported_accounts = [AccountType.DEBIT_CARD, AccountType.CREDIT_CARD]
+    if get_account_response.account.type not in supported_accounts:
+        raise HTTPException(
+            detail=f"Create card: unsupported account type {get_account_response.account.type}",
+            status_code=status.HTTP_400_BAD_REQUEST
         )
 
     card = await cards_repository.create(
