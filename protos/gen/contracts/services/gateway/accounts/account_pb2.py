@@ -26,13 +26,13 @@ from contracts.services.cards import card_pb2 as contracts_dot_services_dot_card
 from contracts.services.accounts import account_pb2 as contracts_dot_services_dot_accounts_dot_account__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n1contracts/services/gateway/accounts/account.proto\x12#contracts.services.gateway.accounts\x1a#contracts/services/cards/card.proto\x1a)contracts/services/accounts/account.proto\"s\n\x0b\x41\x63\x63ountView\x12\x35\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32$.contracts.services.accounts.Account\x12-\n\x05\x63\x61rds\x18\x02 \x03(\x0b\x32\x1e.contracts.services.cards.Cardb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n1contracts/services/gateway/accounts/account.proto\x12#contracts.services.gateway.accounts\x1a#contracts/services/cards/card.proto\x1a)contracts/services/accounts/account.proto\"\xcd\x01\n\x0b\x41\x63\x63ountView\x12\n\n\x02id\x18\x01 \x01(\t\x12\x36\n\x04type\x18\x02 \x01(\x0e\x32(.contracts.services.accounts.AccountType\x12-\n\x05\x63\x61rds\x18\x03 \x03(\x0b\x32\x1e.contracts.services.cards.Card\x12:\n\x06status\x18\x04 \x01(\x0e\x32*.contracts.services.accounts.AccountStatus\x12\x0f\n\x07\x62\x61lance\x18\x05 \x01(\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'contracts.services.gateway.accounts.account_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_ACCOUNTVIEW']._serialized_start=170
-  _globals['_ACCOUNTVIEW']._serialized_end=285
+  _globals['_ACCOUNTVIEW']._serialized_start=171
+  _globals['_ACCOUNTVIEW']._serialized_end=376
 # @@protoc_insertion_point(module_scope)

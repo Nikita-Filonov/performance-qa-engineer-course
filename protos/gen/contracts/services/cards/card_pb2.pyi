@@ -93,13 +93,9 @@ class Card(google.protobuf.message.Message):
     status: global___CardStatus.ValueType
     account_id: builtins.str
     card_number: builtins.str
-    """TODO"""
     card_holder: builtins.str
-    """TODO"""
     expiry_date: builtins.str
-    """TODO"""
     payment_system: global___CardPaymentSystem.ValueType
-    """TODO"""
     def __init__(
         self,
         *,

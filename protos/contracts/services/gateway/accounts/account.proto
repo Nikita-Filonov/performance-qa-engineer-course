@@ -6,6 +6,9 @@ import "contracts/services/cards/card.proto";
 import "contracts/services/accounts/account.proto";
 
 message AccountView {
-  contracts.services.accounts.Account account = 1;
-  repeated contracts.services.cards.Card cards = 2;
+  string id = 1;
+  contracts.services.accounts.AccountType type = 2;
+  repeated contracts.services.cards.Card cards = 3;
+  contracts.services.accounts.AccountStatus status = 4;
+  double balance = 5;
 }

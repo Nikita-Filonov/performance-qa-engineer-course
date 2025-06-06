@@ -18,19 +18,26 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 class AccountView(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    ACCOUNT_FIELD_NUMBER: builtins.int
+    ID_FIELD_NUMBER: builtins.int
+    TYPE_FIELD_NUMBER: builtins.int
     CARDS_FIELD_NUMBER: builtins.int
-    @property
-    def account(self) -> contracts.services.accounts.account_pb2.Account: ...
+    STATUS_FIELD_NUMBER: builtins.int
+    BALANCE_FIELD_NUMBER: builtins.int
+    id: builtins.str
+    type: contracts.services.accounts.account_pb2.AccountType.ValueType
+    status: contracts.services.accounts.account_pb2.AccountStatus.ValueType
+    balance: builtins.float
     @property
     def cards(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[contracts.services.cards.card_pb2.Card]: ...
     def __init__(
         self,
         *,
-        account: contracts.services.accounts.account_pb2.Account | None = ...,
+        id: builtins.str = ...,
+        type: contracts.services.accounts.account_pb2.AccountType.ValueType = ...,
         cards: collections.abc.Iterable[contracts.services.cards.card_pb2.Card] | None = ...,
+        status: contracts.services.accounts.account_pb2.AccountStatus.ValueType = ...,
+        balance: builtins.float = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["account", b"account"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["account", b"account", "cards", b"cards"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["balance", b"balance", "cards", b"cards", "id", b"id", "status", b"status", "type", b"type"]) -> None: ...
 
 global___AccountView = AccountView

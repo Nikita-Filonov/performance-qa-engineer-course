@@ -3,6 +3,7 @@ import uuid
 from fastapi import HTTPException
 
 from libs.faker import fake
+from services.accounts.apps.accounts.schema.accounts import AccountSchema
 from services.accounts.clients.accounts.http import AccountsHTTPClient
 from services.cards.apps.cards.schema.cards import CardSchema
 from services.cards.clients.cards.http import CardsHTTPClient
@@ -24,6 +25,16 @@ from services.gateway.apps.accounts.schema.accounts import (
 from services.users.clients.users.http import UsersHTTPClient, UsersHTTPClientError
 
 
+def build_account_view(cards: list[CardSchema], account: AccountSchema) -> AccountViewSchema:
+    return AccountViewSchema(
+        id=account.id,
+        type=account.type,
+        cards=cards,
+        status=account.status,
+        balance=account.balance
+    )
+
+
 async def get_accounts(
         query: GetAccountsQuerySchema,
         cards_http_client: CardsHTTPClient,
@@ -35,7 +46,7 @@ async def get_accounts(
     for account in get_accounts_response.accounts:
         get_cards_response = await cards_http_client.get_cards(account.id)
 
-        results.append(AccountViewSchema(cards=get_cards_response.cards, account=account))
+        results.append(build_account_view(cards=get_cards_response.cards, account=account))
 
     return GetAccountsResponseSchema(accounts=results)
 
@@ -96,7 +107,7 @@ async def open_deposit_account(
     )
 
     return OpenDepositAccountResponseSchema(
-        account=AccountViewSchema(cards=[], account=create_account_response.account)
+        account=build_account_view(cards=[], account=create_account_response.account)
     )
 
 
@@ -115,7 +126,7 @@ async def open_savings_account(
     )
 
     return OpenSavingsAccountResponseSchema(
-        account=AccountViewSchema(cards=[], account=create_account_response.account)
+        account=build_account_view(cards=[], account=create_account_response.account)
     )
 
 
@@ -142,7 +153,7 @@ async def open_debit_card_account(
     )
 
     return OpenDebitCardAccountResponseSchema(
-        account=AccountViewSchema(cards=cards, account=create_account_response.account)
+        account=build_account_view(cards=cards, account=create_account_response.account)
     )
 
 
@@ -169,5 +180,5 @@ async def open_credit_card_account(
     )
 
     return OpenCreditCardAccountResponseSchema(
-        account=AccountViewSchema(cards=cards, account=create_account_response.account)
+        account=build_account_view(cards=cards, account=create_account_response.account)
     )

@@ -1,5 +1,6 @@
 from grpc.aio import AioRpcError, ServicerContext
 
+from contracts.services.accounts.account_pb2 import Account
 from contracts.services.cards.card_pb2 import Card
 from contracts.services.gateway.accounts.account_pb2 import AccountView
 from contracts.services.gateway.accounts.rpc_get_accounts_pb2 import GetAccountsRequest, GetAccountsResponse
@@ -27,6 +28,16 @@ from services.documents.clients.tariffs.grpc import TariffsGRPCClient
 from services.users.clients.users.grpc import UsersGRPCClient
 
 
+def build_account_view(cards: list[Card], account: Account) -> AccountView:
+    return AccountView(
+        id=account.id,
+        type=account.type,
+        cards=cards,
+        status=account.status,
+        balance=account.balance
+    )
+
+
 async def get_accounts(
         request: GetAccountsRequest,
         cards_grpc_client: CardsGRPCClient,
@@ -38,7 +49,7 @@ async def get_accounts(
     for account in accounts:
         cards = await cards_grpc_client.get_cards(account.id)
 
-        results.append(AccountView(cards=cards, account=account))
+        results.append(build_account_view(cards=cards, account=account))
 
     return GetAccountsResponse(accounts=results)
 
@@ -99,7 +110,7 @@ async def open_deposit_account(
         contracts_grpc_client=contracts_grpc_client
     )
 
-    return OpenDepositAccountResponse(account=AccountView(cards=[], account=account))
+    return OpenDepositAccountResponse(account=build_account_view(cards=[], account=account))
 
 
 async def open_savings_account(
@@ -116,7 +127,7 @@ async def open_savings_account(
         contracts_grpc_client=contracts_grpc_client
     )
 
-    return OpenSavingsAccountResponse(account=AccountView(cards=[], account=account))
+    return OpenSavingsAccountResponse(account=build_account_view(cards=[], account=account))
 
 
 async def open_debit_card_account(
@@ -143,7 +154,7 @@ async def open_debit_card_account(
         contracts_grpc_client=contracts_grpc_client
     )
 
-    return OpenDebitCardAccountResponse(account=AccountView(cards=cards, account=account))
+    return OpenDebitCardAccountResponse(account=build_account_view(cards=cards, account=account))
 
 
 async def open_credit_card_account(
@@ -170,4 +181,4 @@ async def open_credit_card_account(
         contracts_grpc_client=contracts_grpc_client
     )
 
-    return OpenCreditCardAccountResponse(account=AccountView(cards=cards, account=account))
+    return OpenCreditCardAccountResponse(account=build_account_view(cards=cards, account=account))

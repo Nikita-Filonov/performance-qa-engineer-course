@@ -2,16 +2,20 @@ import uuid
 from typing import Self
 
 from fastapi import Query
+from pydantic import UUID4
 
 from libs.schema.base import BaseSchema
 from libs.schema.query import QuerySchema
-from services.accounts.apps.accounts.schema.accounts import AccountSchema
+from services.accounts.services.postgres.models.accounts import AccountType, AccountStatus
 from services.cards.apps.cards.schema.cards import CardSchema
 
 
 class AccountViewSchema(BaseSchema):
+    id: UUID4
+    type: AccountType
     cards: list[CardSchema]
-    account: AccountSchema
+    status: AccountStatus
+    balance: float
 
 
 class GetAccountsQuerySchema(QuerySchema):
