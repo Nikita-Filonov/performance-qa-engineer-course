@@ -1,3 +1,4 @@
+from grpc import StatusCode
 from grpc.aio import AioRpcError, ServicerContext
 
 from contracts.services.documents.contracts.contract_pb2 import Contract
@@ -26,7 +27,13 @@ async def get_contract(
             details=f"Get contract: {error.details()}"
         )
 
-    file = await documents_s3_client.get_contract_file(account.id)
+    try:
+        file = await documents_s3_client.get_contract_file(account.id)
+    except Exception as error:
+        await context.abort(
+            code=StatusCode.INTERNAL,
+            details=f"Get contract: {error}"
+        )
 
     return GetContractResponse(contract=build_contract_from_file(file))
 
