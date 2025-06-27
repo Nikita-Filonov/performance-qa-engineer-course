@@ -13,8 +13,15 @@ class KafkaProducerClient:
 
     async def start(self):
         self.producer = AIOKafkaProducer(bootstrap_servers=self.config.bootstrap_servers)
-        await self.producer.start()
-        self.logger.info("Kafka producer started")
+
+        try:
+            await self.producer.start()
+            self.logger.info("Kafka producer started")
+        except Exception as error:
+            self.logger.exception(f"Failed to start Kafka producer: {error}")
+            await self.stop()
+
+            raise error
 
     async def stop(self):
         if self.producer:
