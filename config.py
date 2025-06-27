@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from libs.config.grpc import GRPCServerConfig, GRPCClientConfig
@@ -11,10 +13,13 @@ from libs.config.s3 import S3ClientConfig
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         extra='allow',
-        env_file='.env',
+        env_file=os.environ.get('ENV_FILE'),
         env_file_encoding='utf-8',
         env_nested_delimiter='.'
     )
+
+    mock_http_server: HTTPServerConfig
+    mock_grpc_server: GRPCServerConfig
 
     users_http_server: HTTPServerConfig
     users_http_client: HTTPClientConfig
