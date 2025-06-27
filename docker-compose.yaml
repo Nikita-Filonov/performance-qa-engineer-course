@@ -1,8 +1,7 @@
 version: '3.9'
 
 x-base-service: &base-service
-  build:
-    context: .
+  image: base-service
   volumes:
     - .:/app
   working_dir: /app
@@ -15,9 +14,7 @@ services:
   # minio
   minio:
     image: minio/minio
-    ports:
-      - "3000:9000"
-      - "3001:9001"
+    ports: [ "3000:9000", "3001:9001" ]
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -31,11 +28,41 @@ services:
     command: [ "redis-server", "--requirepass", "redisadmin" ]
     container_name: redis
 
+  # kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    ports: [ "9092:9092" ]
+    depends_on: [ "zookeeper" ]
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    container_name: kafka
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports: [ "8081:8080" ]
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local-kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    container_name: kafka-ui
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    container_name: zookeeper
+
   # postgres
   postgres:
     image: postgres:15
-    ports:
-      - "5432:5432"
+    ports: [ "5432:5432" ]
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -56,19 +83,16 @@ services:
       - ./scripts:/scripts
       - ./migrations/postgres:/docker-entrypoint-initdb.d
     command: [ "bash", "./scripts/postgres.sh" ]
-    depends_on:
-      - postgres
+    depends_on: [ "postgres" ]
     environment:
       PGPASSWORD: root
     container_name: postgres-init
 
   postgres-admin:
     image: dpage/pgadmin4
-    ports:
-      - "5050:80"
+    ports: [ "5050:80" ]
     restart: always
-    depends_on:
-      - postgres
+    depends_on: [ "postgres" ]
     environment:
       PGADMIN_DEFAULT_EMAIL: postgresadmin@admin.com
       PGADMIN_DEFAULT_PASSWORD: postgresadmin
@@ -209,6 +233,12 @@ services:
     ports: [ "9005:9005" ]
     command: "services.documents.server.grpc"
     container_name: "grpc-documents"
+
+  kafka-documents:
+    <<: *python-service
+    command: "services.documents.server.kafka"
+    depends_on: [ "kafka" ]
+    container_name: "kafka-documents"
 
   # operations-service
   http-operations:
