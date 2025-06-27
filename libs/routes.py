@@ -5,6 +5,7 @@ class APIRoutes(StrEnum):
     USERS = '/api/v1/users'
     CARDS = '/api/v1/cards'
     TARIFFS = '/api/v1/tariffs'
+    RECEIPTS = '/api/v1/receipts'
     PAYMENTS = '/api/v1/payments'
     ACCOUNTS = '/api/v1/accounts'
     CONTRACTS = '/api/v1/contracts'
