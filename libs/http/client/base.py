@@ -1,3 +1,4 @@
+import asyncio
 from logging import Logger
 from typing import Any, Optional
 
@@ -66,6 +67,7 @@ class HTTPClient:
                 f'{method} {response.request.url} - Unexpected status {status_code}, retrying'
             )
 
+            await asyncio.sleep(0.3)
             attempt += 1
 
         return response

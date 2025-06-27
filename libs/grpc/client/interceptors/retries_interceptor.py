@@ -1,3 +1,4 @@
+import asyncio
 from logging import Logger
 from typing import Callable
 
@@ -35,6 +36,7 @@ class GRPCRetriesInterceptor(UnaryUnaryClientInterceptor):
                 f'Unexpected response code: "{code}" for {client_call_details.method}, retrying'
             )
 
+            await asyncio.sleep(0.3)
             attempt += 1
 
         return response
