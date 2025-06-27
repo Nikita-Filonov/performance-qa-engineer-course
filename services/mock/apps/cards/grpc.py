@@ -9,10 +9,10 @@ from services.mock.apps.cards.mock import loader
 
 class CardsMockService(CardsServiceServicer):
     async def GetCard(self, request: GetCardRequest, context: ServicerContext) -> GetCardResponse:
-        return loader.load_grpc("GetCard/default.json", GetCardResponse)
+        return await loader.load_grpc_with_timeout("GetCard/default.json", GetCardResponse)
 
     async def GetCards(self, request: GetCardsRequest, context: ServicerContext) -> GetCardsResponse:
-        return loader.load_grpc("GetCards/default.json", GetCardsResponse)
+        return await loader.load_grpc_with_timeout("GetCards/default.json", GetCardsResponse)
 
     async def CreateCard(self, request: CreateCardRequest, context: ServicerContext) -> CreateCardResponse:
-        return loader.load_grpc("CreateCard/default.json", CreateCardResponse)
+        return await loader.load_grpc_with_timeout("CreateCard/default.json", CreateCardResponse)

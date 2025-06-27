@@ -8,7 +8,7 @@ from services.mock.apps.documents.receipts.mock import loader
 
 class ReceiptsMockService(ReceiptsServiceServicer):
     async def GetReceipt(self, request: GetReceiptRequest, context: ServicerContext) -> GetReceiptResponse:
-        return loader.load_grpc('GetReceipt/default.json', GetReceiptResponse)
+        return await loader.load_grpc_with_timeout('GetReceipt/default.json', GetReceiptResponse)
 
     async def CreateReceipt(self, request: CreateReceiptRequest, context: ServicerContext) -> CreateReceiptResponse:
-        return loader.load_grpc('CreateReceipt/default.json', CreateReceiptResponse)
+        return await loader.load_grpc_with_timeout('CreateReceipt/default.json', CreateReceiptResponse)

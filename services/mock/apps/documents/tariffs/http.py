@@ -18,9 +18,9 @@ tariffs_mock_router = APIRouter(
 
 @tariffs_mock_router.get('/{account_id}', response_model=GetTariffResponseSchema)
 async def get_tariff_view(account_id: uuid.UUID):
-    return loader.load_http("get_tariff/default.json", GetTariffResponseSchema)
+    return await loader.load_http_with_timeout("get_tariff/default.json", GetTariffResponseSchema)
 
 
 @tariffs_mock_router.post('', response_model=CreateTariffResponseSchema)
 async def create_tariff_view(request: CreateTariffRequestSchema):
-    return loader.load_http("create_tariff/default.json", CreateTariffResponseSchema)
+    return await loader.load_http_with_timeout("create_tariff/default.json", CreateTariffResponseSchema)

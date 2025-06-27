@@ -8,7 +8,7 @@ from services.mock.apps.documents.tariffs.mock import loader
 
 class TariffsMockService(TariffsServiceServicer):
     async def GetTariff(self, request: GetTariffRequest, context: ServicerContext) -> GetTariffResponse:
-        return loader.load_grpc("GetTariff/default.json", GetTariffResponse)
+        return await loader.load_grpc_with_timeout("GetTariff/default.json", GetTariffResponse)
 
     async def CreateTariff(self, request: CreateTariffRequest, context: ServicerContext) -> CreateTariffResponse:
-        return loader.load_grpc("CreateTariff/default.json", CreateTariffResponse)
+        return await loader.load_grpc_with_timeout("CreateTariff/default.json", CreateTariffResponse)

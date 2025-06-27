@@ -8,7 +8,7 @@ from services.mock.apps.documents.contracts.mock import loader
 
 class ContractsMockService(ContractsServiceServicer):
     async def GetContract(self, request: GetContractRequest, context: ServicerContext) -> GetContractResponse:
-        return loader.load_grpc("GetContract/default.json", GetContractResponse)
+        return await loader.load_grpc_with_timeout("GetContract/default.json", GetContractResponse)
 
     async def CreateContract(self, request: CreateContractRequest, context: ServicerContext) -> CreateContractResponse:
-        return loader.load_grpc("CreateContract/default.json", CreateContractResponse)
+        return await loader.load_grpc_with_timeout("CreateContract/default.json", CreateContractResponse)

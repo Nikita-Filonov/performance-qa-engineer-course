@@ -13,17 +13,19 @@ from services.mock.apps.accounts.mock import loader
 
 class AccountsMockService(AccountsServiceServicer):
     async def GetAccount(self, request: GetAccountRequest, context: ServicerContext) -> GetAccountResponse:
-        return loader.load_grpc('GetAccount/default.json', GetAccountResponse)
+        return await loader.load_grpc_with_timeout('GetAccount/default.json', GetAccountResponse)
 
     async def GetAccounts(self, request: GetAccountsRequest, context: ServicerContext) -> GetAccountsResponse:
-        return loader.load_grpc('GetAccounts/default.json', GetAccountsResponse)
+        return await loader.load_grpc_with_timeout('GetAccounts/default.json', GetAccountsResponse)
 
     async def CreateAccount(self, request: CreateAccountRequest, context: ServicerContext) -> CreateAccountResponse:
-        return loader.load_grpc('CreateAccount/default.json', CreateAccountResponse)
+        return await loader.load_grpc_with_timeout('CreateAccount/default.json', CreateAccountResponse)
 
     async def UpdateAccountBalance(
             self,
             request: UpdateAccountBalanceRequest,
             context: ServicerContext
     ) -> UpdateAccountBalanceResponse:
-        return loader.load_grpc('UpdateAccountBalance/default.json', UpdateAccountBalanceResponse)
+        return await loader.load_grpc_with_timeout(
+            'UpdateAccountBalance/default.json', UpdateAccountBalanceResponse
+        )

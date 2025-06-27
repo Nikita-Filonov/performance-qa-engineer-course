@@ -21,17 +21,17 @@ accounts_mock_router = APIRouter(
 
 @accounts_mock_router.get('', response_model=GetAccountsResponseSchema)
 async def get_accounts_view():
-    return loader.load_http("get_accounts/default.json", GetAccountsResponseSchema)
+    return await loader.load_http_with_timeout("get_accounts/default.json", GetAccountsResponseSchema)
 
 
 @accounts_mock_router.get('/{account_id}', response_model=GetAccountResponseSchema)
 async def get_account_view(account_id: uuid.UUID):
-    return loader.load_http("get_account/default.json", GetAccountResponseSchema)
+    return await loader.load_http_with_timeout("get_account/default.json", GetAccountResponseSchema)
 
 
 @accounts_mock_router.post('', response_model=CreateAccountResponseSchema)
 async def create_account_view(request: CreateAccountRequestSchema):
-    return loader.load_http("create_account/default.json", CreateAccountResponseSchema)
+    return await loader.load_http_with_timeout("create_account/default.json", CreateAccountResponseSchema)
 
 
 @accounts_mock_router.post(
@@ -39,4 +39,6 @@ async def create_account_view(request: CreateAccountRequestSchema):
     response_model=UpdateAccountBalanceResponseSchema
 )
 async def update_account_balance_view(request: UpdateAccountBalanceRequestSchema):
-    return loader.load_http("update_account_balance/default.json", UpdateAccountBalanceResponseSchema)
+    return await loader.load_http_with_timeout(
+        "update_account_balance/default.json", UpdateAccountBalanceResponseSchema
+    )

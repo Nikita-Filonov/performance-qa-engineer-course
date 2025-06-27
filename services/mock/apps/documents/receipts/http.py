@@ -18,9 +18,9 @@ receipts_mock_router = APIRouter(
 
 @receipts_mock_router.get('/{operation_id}', response_model=GetReceiptResponseSchema)
 async def get_receipt_view(operation_id: uuid.UUID):
-    return loader.load_http("get_receipt/default.json", GetReceiptResponseSchema)
+    return await loader.load_http_with_timeout("get_receipt/default.json", GetReceiptResponseSchema)
 
 
 @receipts_mock_router.post('', response_model=CreateReceiptResponseSchema)
 async def create_receipt_view(request: CreateReceiptRequestSchema):
-    return loader.load_http("create_receipt/default.json", CreateReceiptResponseSchema)
+    return await loader.load_http_with_timeout("create_receipt/default.json", CreateReceiptResponseSchema)

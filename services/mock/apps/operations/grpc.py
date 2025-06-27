@@ -13,21 +13,23 @@ from services.mock.apps.operations.mock import loader
 
 class OperationsMockService(OperationsServiceServicer):
     async def GetOperation(self, request: GetOperationRequest, context: ServicerContext) -> GetOperationResponse:
-        return loader.load_grpc("GetOperation/default.json", GetOperationResponse)
+        return await loader.load_grpc_with_timeout("GetOperation/default.json", GetOperationResponse)
 
     async def GetOperations(self, request: GetOperationsRequest, context: ServicerContext) -> GetOperationsResponse:
-        return loader.load_grpc("GetOperations/default.json", GetOperationsResponse)
+        return await loader.load_grpc_with_timeout("GetOperations/default.json", GetOperationsResponse)
 
     async def CreateOperation(
             self,
             request: CreateOperationRequest,
             context: ServicerContext
     ) -> CreateOperationResponse:
-        return loader.load_grpc("CreateOperation/default.json", CreateOperationResponse)
+        return await loader.load_grpc_with_timeout("CreateOperation/default.json", CreateOperationResponse)
 
     async def GetOperationsSummary(
             self,
             request: GetOperationsSummaryRequest,
             context: ServicerContext
     ) -> GetOperationsSummaryResponse:
-        return loader.load_grpc("GetOperationsSummary/default.json", GetOperationsSummaryResponse)
+        return await loader.load_grpc_with_timeout(
+            "GetOperationsSummary/default.json", GetOperationsSummaryResponse
+        )

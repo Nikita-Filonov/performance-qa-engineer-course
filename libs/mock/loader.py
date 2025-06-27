@@ -1,7 +1,10 @@
+import asyncio
+import random
 from logging import Logger
 from pathlib import Path
 from typing import TypeVar, Type, Literal
 
+import aiofiles
 from google.protobuf.json_format import Parse
 from google.protobuf.message import Message
 from pydantic import BaseModel
@@ -27,7 +30,7 @@ class MockLoader:
         self.root = root
         self.logger = logger
 
-    def get_raw_data(self, protocol: Literal['http', 'grpc'], file: str) -> str:
+    async def get_raw_data(self, protocol: Literal['http', 'grpc'], file: str) -> str:
         """
         Получает необработанные данные из файла мока по указанному протоколу.
 
@@ -43,9 +46,10 @@ class MockLoader:
             raise FileNotFoundError(f"Mock file not found: {mock_file}")
 
         self.logger.info(f"Loading mock file: {mock_file}")
-        return mock_file.read_text(encoding="utf-8")
+        async with aiofiles.open(mock_file, mode='r', encoding='utf-8') as async_file:
+            return await async_file.read()
 
-    def load_http(self, file: str, model: Type[HTTPModelT]) -> HTTPModelT:
+    async def load_http(self, file: str, model: Type[HTTPModelT]) -> HTTPModelT:
         """
         Загружает HTTP мок-файл и валидирует его через указанную Pydantic-модель.
 
@@ -53,11 +57,11 @@ class MockLoader:
         :param model: Класс Pydantic-модели для валидации
         :return: Экземпляр модели с валидированными данными
         """
-        raw = self.get_raw_data("http", file)
+        raw = await self.get_raw_data("http", file)
         self.logger.debug(f"Validating HTTP mock with Pydantic model: {model.__name__}")
         return model.model_validate_json(raw)
 
-    def load_grpc(self, file: str, model: Type[GRPCModelT]) -> GRPCModelT:
+    async def load_grpc(self, file: str, model: Type[GRPCModelT]) -> GRPCModelT:
         """
         Загружает gRPC мок-файл и парсит его в protobuf-сообщение.
 
@@ -65,6 +69,20 @@ class MockLoader:
         :param model: Класс protobuf-сообщения
         :return: Экземпляр protobuf-сообщения с распарсенными данными
         """
-        raw = self.get_raw_data("grpc", file)
-        self.logger.debug(f"Validating HTTP mock with Protobuf message: {model.__name__}")
+        raw = await self.get_raw_data("grpc", file)
+        self.logger.debug(f"Validating gRPC mock with Protobuf message: {model.__name__}")
         return Parse(raw, model())
+
+    async def load_http_with_timeout(self, file: str, model: Type[HTTPModelT]) -> HTTPModelT:
+        """
+        Загружает HTTP мок с искусственной задержкой для имитации сетевой задержки.
+        """
+        await asyncio.sleep(random.uniform(0.05, 0.1))
+        return await self.load_http(file, model)
+
+    async def load_grpc_with_timeout(self, file: str, model: Type[GRPCModelT]) -> GRPCModelT:
+        """
+        Загружает gRPC мок с искусственной задержкой для имитации сетевой задержки.
+        """
+        await asyncio.sleep(random.uniform(0.05, 0.1))
+        return await self.load_grpc(file, model)

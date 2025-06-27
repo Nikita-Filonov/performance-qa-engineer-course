@@ -23,7 +23,7 @@ operations_mock_router = APIRouter(
 
 @operations_mock_router.get('', response_model=GetOperationsResponseSchema)
 async def get_operations_view(query: Annotated[GetOperationsQuerySchema, Depends(GetOperationsQuerySchema.as_query)]):
-    return loader.load_http("get_operations/default.json", GetOperationsResponseSchema)
+    return await loader.load_http_with_timeout("get_operations/default.json", GetOperationsResponseSchema)
 
 
 @operations_mock_router.get(
@@ -33,14 +33,16 @@ async def get_operations_view(query: Annotated[GetOperationsQuerySchema, Depends
 async def get_operations_summary_view(
         query: Annotated[GetOperationsSummaryQuerySchema, Depends(GetOperationsSummaryQuerySchema.as_query)],
 ):
-    return loader.load_http("get_operations_summary/default.json", GetOperationsSummaryResponseSchema)
+    return await loader.load_http_with_timeout(
+        "get_operations_summary/default.json", GetOperationsSummaryResponseSchema
+    )
 
 
 @operations_mock_router.get('/{operation_id}', response_model=GetOperationResponseSchema)
 async def get_operation_view(operation_id: uuid.UUID):
-    return loader.load_http("get_operation/default.json", GetOperationResponseSchema)
+    return await loader.load_http_with_timeout("get_operation/default.json", GetOperationResponseSchema)
 
 
 @operations_mock_router.post('', response_model=CreateOperationResponseSchema)
 async def create_operation_view(request: CreateOperationRequestSchema):
-    return loader.load_http("create_operation/default.json", CreateOperationResponseSchema)
+    return await loader.load_http_with_timeout("create_operation/default.json", CreateOperationResponseSchema)

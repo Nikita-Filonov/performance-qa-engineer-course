@@ -18,9 +18,9 @@ users_mock_router = APIRouter(
 
 @users_mock_router.get('/{user_id}', response_model=GetUserResponseSchema)
 async def get_user_view(user_id: uuid.UUID):
-    return loader.load_http("get_user/default.json", GetUserResponseSchema)
+    return await loader.load_http_with_timeout("get_user/default.json", GetUserResponseSchema)
 
 
 @users_mock_router.post('', response_model=CreateUserResponseSchema)
 async def create_user_view(request: CreateUserRequestSchema):
-    return loader.load_http("create_user/default.json", CreateUserResponseSchema)
+    return await loader.load_http_with_timeout("create_user/default.json", CreateUserResponseSchema)

@@ -8,7 +8,7 @@ from services.mock.apps.users.mock import loader
 
 class UsersMockService(UsersServiceServicer):
     async def GetUser(self, request: GetUserRequest, context: ServicerContext) -> GetUserResponse:
-        return loader.load_grpc("GetUser/default.json", GetUserResponse)
+        return await loader.load_grpc_with_timeout("GetUser/default.json", GetUserResponse)
 
     async def CreateUser(self, request: CreateUserRequest, context: ServicerContext) -> CreateUserResponse:
-        return loader.load_grpc("CreateUser/default.json", CreateUserResponse)
+        return await loader.load_grpc_with_timeout("CreateUser/default.json", CreateUserResponse)

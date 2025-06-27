@@ -18,9 +18,9 @@ contracts_mock_router = APIRouter(
 
 @contracts_mock_router.get('/{account_id}', response_model=GetContractResponseSchema)
 async def get_contract_view(account_id: uuid.UUID):
-    return loader.load_http("get_contract/default.json", GetContractResponseSchema)
+    return await loader.load_http_with_timeout("get_contract/default.json", GetContractResponseSchema)
 
 
 @contracts_mock_router.post('', response_model=CreateContractResponseSchema)
 async def create_contract_view(request: CreateContractRequestSchema):
-    return loader.load_http("create_contract/default.json", CreateContractResponseSchema)
+    return await loader.load_http_with_timeout("create_contract/default.json", CreateContractResponseSchema)
