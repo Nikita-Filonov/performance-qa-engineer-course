@@ -1,0 +1,40 @@
+version: '3.9'
+
+x-base-service: &base-service
+  image: base-service
+  volumes:
+    - .:/app
+  working_dir: /app
+
+x-python-service: &python-service
+  <<: *base-service
+  entrypoint: [ "python", "-u", "-m" ]
+  environment:
+    ENV_FILE: .env.ci
+
+services:
+  # mock-service
+  http-mock:
+    <<: *python-service
+    ports: [ "8008:8008" ]
+    command: "services.mock.server.http"
+    container_name: "http-mock"
+
+  grpc-mock:
+    <<: *python-service
+    ports: [ "9008:9008" ]
+    command: "services.mock.server.grpc"
+    container_name: "grpc-mock"
+
+  # gateway-services
+  http-gateway:
+    <<: *python-service
+    ports: [ "8003:8003" ]
+    command: "services.gateway.server.http"
+    container_name: "http-gateway"
+
+  grpc-gateway:
+    <<: *python-service
+    ports: [ "9003:9003" ]
+    command: "services.gateway.server.grpc"
+    container_name: "grpc-gateway"
