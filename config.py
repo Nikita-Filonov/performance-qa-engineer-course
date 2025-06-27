@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from libs.config.grpc import GRPCServerConfig, GRPCClientConfig
 from libs.config.http import HTTPServerConfig, HTTPClientConfig
+from libs.config.kafka import KafkaClientConfig
 from libs.config.postgres import PostgresConfig
 from libs.config.redis import RedisClientConfig
 from libs.config.s3 import S3ClientConfig
@@ -46,6 +47,7 @@ class Settings(BaseSettings):
     documents_http_client: HTTPClientConfig
     documents_grpc_server: GRPCServerConfig
     documents_grpc_client: GRPCClientConfig
+    documents_kafka_client: KafkaClientConfig
 
     operations_s3_client: S3ClientConfig
     operations_http_server: HTTPServerConfig
