@@ -9,4 +9,4 @@ app = FastAPI(title="users-service")
 app.include_router(users_router)
 
 if __name__ == "__main__":
-    build_http_server(app, settings.users_http_server)
+    build_http_server("services.users.server.http:app", settings.users_http_server)

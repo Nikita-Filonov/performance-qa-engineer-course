@@ -9,4 +9,4 @@ app = FastAPI(title="operations-service")
 app.include_router(operations_router)
 
 if __name__ == "__main__":
-    build_http_server(app, settings.operations_http_server)
+    build_http_server("services.operations.server.http:app", settings.operations_http_server)

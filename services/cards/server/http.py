@@ -9,4 +9,4 @@ app = FastAPI(title="cards-service")
 app.include_router(cards_router)
 
 if __name__ == "__main__":
-    build_http_server(app, settings.cards_http_server)
+    build_http_server("services.cards.server.http:app", settings.cards_http_server)

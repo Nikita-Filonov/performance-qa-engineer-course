@@ -17,4 +17,4 @@ app.include_router(documents_gateway_router)
 app.include_router(operations_gateway_router)
 
 if __name__ == "__main__":
-    build_http_server(app, settings.gateway_http_server)
+    build_http_server("services.gateway.server.http:app", settings.gateway_http_server)
