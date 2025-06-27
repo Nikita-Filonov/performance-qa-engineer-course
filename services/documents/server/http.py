@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from config import settings
 from libs.http.server.base import build_http_server
 from services.documents.apps.contracts.api.contracts.http import contracts_router
-from services.documents.apps.receipts.api.tariffs.http import receipts_router
+from services.documents.apps.receipts.api.receipts.http import receipts_router
 from services.documents.apps.tariffs.api.tariffs.http import tariffs_router
 
 app = FastAPI(title="documents-service")
