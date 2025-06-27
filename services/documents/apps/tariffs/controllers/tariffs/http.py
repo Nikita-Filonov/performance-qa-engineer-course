@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from pydantic import HttpUrl
 
 from libs.s3.client import S3File
@@ -31,7 +31,13 @@ async def get_tariff(
             status_code=error.status_code
         )
 
-    file = await documents_s3_client.get_tariff_file(get_account_response.account.id)
+    try:
+        file = await documents_s3_client.get_tariff_file(get_account_response.account.id)
+    except Exception as error:
+        raise HTTPException(
+            detail=f"Get tariff: {error}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
     return GetTariffResponseSchema(tariff=build_tariff_from_file(file))
 

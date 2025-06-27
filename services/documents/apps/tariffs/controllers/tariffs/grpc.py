@@ -1,3 +1,4 @@
+from grpc import StatusCode
 from grpc.aio import AioRpcError, ServicerContext
 
 from contracts.services.documents.tariffs.rpc_create_tariff_pb2 import CreateTariffRequest, CreateTariffResponse
@@ -26,7 +27,13 @@ async def get_tariff(
             details=f"Get tariff: {error.details()}"
         )
 
-    file = await documents_s3_client.get_tariff_file(account.id)
+    try:
+        file = await documents_s3_client.get_tariff_file(account.id)
+    except Exception as error:
+        await context.abort(
+            code=StatusCode.INTERNAL,
+            details=f"Get tariff: {error}"
+        )
 
     return GetTariffResponse(tariff=build_tariff_from_file(file))
 

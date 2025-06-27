@@ -1,3 +1,5 @@
+import asyncio
+
 from grpc.aio import AioRpcError, ServicerContext
 
 from contracts.services.accounts.account_pb2 import Account
@@ -23,12 +25,11 @@ from contracts.services.gateway.accounts.rpc_open_savings_account_pb2 import (
 from libs.faker import fake
 from services.accounts.clients.accounts.grpc import AccountsGRPCClient
 from services.cards.clients.cards.grpc import CardsGRPCClient
-from services.documents.clients.contracts.grpc import ContractsGRPCClient
-from services.documents.clients.tariffs.grpc import TariffsGRPCClient
+from services.documents.services.kafka.producer import DocumentsKafkaProducerClient
 from services.users.clients.users.grpc import UsersGRPCClient
 
 
-def build_account_view(cards: list[Card], account: Account) -> AccountView:
+def build_account_view(cards: tuple[Card, ...] | list[Card], account: Account) -> AccountView:
     return AccountView(
         id=account.id,
         type=account.type,
@@ -60,7 +61,7 @@ async def create_cards_for_account(
         account_id: str,
         users_grpc_client: UsersGRPCClient,
         cards_grpc_client: CardsGRPCClient,
-) -> list[Card]:
+) -> tuple[Card, Card]:
     try:
         user = await users_grpc_client.get_user(user_id)
     except AioRpcError as error:
@@ -69,63 +70,50 @@ async def create_cards_for_account(
             details=f"Open account: {error.details()}"
         )
 
-    virtual_card = await cards_grpc_client.create_virtual_card(
-        last_name=user.last_name,
-        first_name=user.first_name,
-        account_id=account_id
-    )
-    physical_card = await cards_grpc_client.create_physical_card(
+    create_card_payload = dict(
         last_name=user.last_name,
         first_name=user.first_name,
         account_id=account_id
     )
 
-    return [virtual_card, physical_card]
+    return await asyncio.gather(
+        cards_grpc_client.create_virtual_card(**create_card_payload),
+        cards_grpc_client.create_physical_card(**create_card_payload)
+    )
 
 
 async def create_documents_for_account(
         account_id: str,
-        tariffs_grpc_client: TariffsGRPCClient,
-        contracts_grpc_client: ContractsGRPCClient
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ):
-    await tariffs_grpc_client.create_tariff(
+    await documents_kafka_producer_client.produce_tariff_document(
         account_id=account_id, content=fake.sentence().encode()
     )
-    await contracts_grpc_client.create_contract(
+    await documents_kafka_producer_client.produce_contract_document(
         account_id=account_id, content=fake.sentence().encode()
     )
 
 
 async def open_deposit_account(
         request: OpenDepositAccountRequest,
-        tariffs_grpc_client: TariffsGRPCClient,
         accounts_grpc_client: AccountsGRPCClient,
-        contracts_grpc_client: ContractsGRPCClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenDepositAccountResponse:
     account = await accounts_grpc_client.create_deposit_account(request.user_id)
 
-    await create_documents_for_account(
-        account_id=account.id,
-        tariffs_grpc_client=tariffs_grpc_client,
-        contracts_grpc_client=contracts_grpc_client
-    )
+    await create_documents_for_account(account.id, documents_kafka_producer_client)
 
     return OpenDepositAccountResponse(account=build_account_view(cards=[], account=account))
 
 
 async def open_savings_account(
         request: OpenSavingsAccountRequest,
-        tariffs_grpc_client: TariffsGRPCClient,
         accounts_grpc_client: AccountsGRPCClient,
-        contracts_grpc_client: ContractsGRPCClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenSavingsAccountResponse:
     account = await accounts_grpc_client.create_savings_account(request.user_id)
 
-    await create_documents_for_account(
-        account_id=account.id,
-        tariffs_grpc_client=tariffs_grpc_client,
-        contracts_grpc_client=contracts_grpc_client
-    )
+    await create_documents_for_account(account.id, documents_kafka_producer_client)
 
     return OpenSavingsAccountResponse(account=build_account_view(cards=[], account=account))
 
@@ -135,9 +123,8 @@ async def open_debit_card_account(
         request: OpenDebitCardAccountRequest,
         users_grpc_client: UsersGRPCClient,
         cards_grpc_client: CardsGRPCClient,
-        tariffs_grpc_client: TariffsGRPCClient,
         accounts_grpc_client: AccountsGRPCClient,
-        contracts_grpc_client: ContractsGRPCClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenDebitCardAccountResponse:
     account = await accounts_grpc_client.create_debit_card_account(request.user_id)
     cards = await create_cards_for_account(
@@ -148,11 +135,7 @@ async def open_debit_card_account(
         cards_grpc_client=cards_grpc_client
     )
 
-    await create_documents_for_account(
-        account_id=account.id,
-        tariffs_grpc_client=tariffs_grpc_client,
-        contracts_grpc_client=contracts_grpc_client
-    )
+    await create_documents_for_account(account.id, documents_kafka_producer_client)
 
     return OpenDebitCardAccountResponse(account=build_account_view(cards=cards, account=account))
 
@@ -162,9 +145,8 @@ async def open_credit_card_account(
         request: OpenCreditCardAccountRequest,
         users_grpc_client: UsersGRPCClient,
         cards_grpc_client: CardsGRPCClient,
-        tariffs_grpc_client: TariffsGRPCClient,
         accounts_grpc_client: AccountsGRPCClient,
-        contracts_grpc_client: ContractsGRPCClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenCreditCardAccountResponse:
     account = await accounts_grpc_client.create_credit_card_account(request.user_id)
     cards = await create_cards_for_account(
@@ -175,10 +157,6 @@ async def open_credit_card_account(
         cards_grpc_client=cards_grpc_client
     )
 
-    await create_documents_for_account(
-        account_id=account.id,
-        tariffs_grpc_client=tariffs_grpc_client,
-        contracts_grpc_client=contracts_grpc_client
-    )
+    await create_documents_for_account(account.id, documents_kafka_producer_client)
 
     return OpenCreditCardAccountResponse(account=build_account_view(cards=cards, account=account))

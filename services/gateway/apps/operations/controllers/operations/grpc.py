@@ -42,6 +42,7 @@ from contracts.services.gateway.operations.rpc_make_transfer_operation_pb2 impor
     MakeTransferOperationRequest,
     MakeTransferOperationResponse
 )
+from services.documents.clients.receipts.grpc import ReceiptsGRPCClient
 from services.operations.clients.operations.grpc import OperationsGRPCClient
 
 
@@ -65,9 +66,9 @@ async def get_operations(
 
 async def get_operation_receipt(
         request: GetOperationReceiptRequest,
-        operations_grpc_client: OperationsGRPCClient
+        receipts_grpc_client: ReceiptsGRPCClient
 ) -> GetOperationReceiptResponse:
-    receipt = await operations_grpc_client.get_operation_receipt(request.operation_id)
+    receipt = await receipts_grpc_client.get_receipt(request.operation_id)
 
     return GetOperationReceiptResponse(receipt=receipt)
 

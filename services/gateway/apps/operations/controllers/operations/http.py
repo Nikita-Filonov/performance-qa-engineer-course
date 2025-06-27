@@ -2,6 +2,8 @@ import uuid
 
 from fastapi import HTTPException
 
+from services.documents.apps.receipts.schema.receipts import GetReceiptResponseSchema
+from services.documents.clients.receipts.http import ReceiptsHTTPClient, ReceiptsHTTPClientError
 from services.gateway.apps.operations.schema.operations import (
     MakeFeeOperationRequestSchema,
     MakeTopUpOperationRequestSchema,
@@ -16,7 +18,6 @@ from services.operations.apps.operations.schema.operations.base import (
     GetOperationsQuerySchema,
     GetOperationsResponseSchema,
     CreateOperationResponseSchema,
-    GetOperationReceiptResponseSchema,
     GetOperationsSummaryQuerySchema,
     GetOperationsSummaryResponseSchema,
 )
@@ -48,11 +49,11 @@ async def get_operations(
 
 async def get_operation_receipt(
         operation_id: uuid.UUID,
-        operations_http_client: OperationsHTTPClient
-) -> GetOperationReceiptResponseSchema:
+        receipts_http_client: ReceiptsHTTPClient
+) -> GetReceiptResponseSchema:
     try:
-        return await operations_http_client.get_operation_receipt(operation_id)
-    except OperationsHTTPClientError as error:
+        return await receipts_http_client.get_receipt(operation_id)
+    except ReceiptsHTTPClientError as error:
         raise HTTPException(
             detail=f"Get operation receipt: {error.details}",
             status_code=error.status_code

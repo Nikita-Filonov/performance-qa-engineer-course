@@ -7,6 +7,10 @@ def build_tariff_file_key(account_id: str) -> str:
     return f'tariff_{account_id}.pdf'
 
 
+def build_receipt_file_key(operation_id: str) -> str:
+    return f'receipt_{operation_id}.pdf'
+
+
 def build_contract_file_key(account_id: str) -> str:
     return f'contract_{account_id}.pdf'
 
@@ -17,6 +21,15 @@ class DocumentsS3Client(S3Client):
 
     async def upload_tariff_file(self, account_id: str, data: bytes) -> S3File:
         key = build_tariff_file_key(account_id)
+
+        await self.upload_file(key=key, data=data)
+        return await self.get_file(key=key)
+
+    async def get_receipt_file(self, operation_id: str) -> S3File:
+        return await self.get_file(key=build_receipt_file_key(operation_id))
+
+    async def upload_receipt_file(self, operation_id: str, data: bytes) -> S3File:
+        key = build_receipt_file_key(operation_id)
 
         await self.upload_file(key=key, data=data)
         return await self.get_file(key=key)

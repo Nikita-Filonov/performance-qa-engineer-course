@@ -5,8 +5,7 @@ from fastapi import APIRouter, Depends
 from libs.routes import APIRoutes
 from services.accounts.clients.accounts.http import AccountsHTTPClient, get_accounts_http_client
 from services.cards.clients.cards.http import CardsHTTPClient, get_cards_http_client
-from services.documents.clients.contracts.http import ContractsHTTPClient, get_contracts_http_client
-from services.documents.clients.tariffs.http import TariffsHTTPClient, get_tariffs_http_client
+from services.documents.services.kafka.producer import DocumentsKafkaProducerClient, get_documents_kafka_producer_client
 from services.gateway.apps.accounts.controllers.accounts.http import (
     get_accounts,
     open_deposit_account,
@@ -53,15 +52,16 @@ async def get_accounts_view(
 )
 async def open_deposit_account_view(
         request: OpenDepositAccountRequestSchema,
-        tariffs_http_client: Annotated[TariffsHTTPClient, Depends(get_tariffs_http_client)],
         accounts_http_client: Annotated[AccountsHTTPClient, Depends(get_accounts_http_client)],
-        contracts_http_client: Annotated[ContractsHTTPClient, Depends(get_contracts_http_client)],
+        documents_kafka_producer_client: Annotated[
+            DocumentsKafkaProducerClient,
+            Depends(get_documents_kafka_producer_client)
+        ]
 ):
     return await open_deposit_account(
         request=request,
-        tariffs_http_client=tariffs_http_client,
         accounts_http_client=accounts_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )
 
 
@@ -71,15 +71,16 @@ async def open_deposit_account_view(
 )
 async def open_savings_account_view(
         request: OpenSavingsAccountRequestSchema,
-        tariffs_http_client: Annotated[TariffsHTTPClient, Depends(get_tariffs_http_client)],
         accounts_http_client: Annotated[AccountsHTTPClient, Depends(get_accounts_http_client)],
-        contracts_http_client: Annotated[ContractsHTTPClient, Depends(get_contracts_http_client)],
+        documents_kafka_producer_client: Annotated[
+            DocumentsKafkaProducerClient,
+            Depends(get_documents_kafka_producer_client)
+        ]
 ):
     return await open_savings_account(
         request=request,
-        tariffs_http_client=tariffs_http_client,
         accounts_http_client=accounts_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )
 
 
@@ -91,17 +92,18 @@ async def open_debit_card_account_view(
         request: OpenDebitCardAccountRequestSchema,
         users_http_client: Annotated[UsersHTTPClient, Depends(get_users_http_client)],
         cards_http_client: Annotated[CardsHTTPClient, Depends(get_cards_http_client)],
-        tariffs_http_client: Annotated[TariffsHTTPClient, Depends(get_tariffs_http_client)],
         accounts_http_client: Annotated[AccountsHTTPClient, Depends(get_accounts_http_client)],
-        contracts_http_client: Annotated[ContractsHTTPClient, Depends(get_contracts_http_client)],
+        documents_kafka_producer_client: Annotated[
+            DocumentsKafkaProducerClient,
+            Depends(get_documents_kafka_producer_client)
+        ]
 ):
     return await open_debit_card_account(
         request=request,
         users_http_client=users_http_client,
         cards_http_client=cards_http_client,
-        tariffs_http_client=tariffs_http_client,
         accounts_http_client=accounts_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )
 
 
@@ -113,15 +115,16 @@ async def open_credit_card_account_view(
         request: OpenCreditCardAccountRequestSchema,
         users_http_client: Annotated[UsersHTTPClient, Depends(get_users_http_client)],
         cards_http_client: Annotated[CardsHTTPClient, Depends(get_cards_http_client)],
-        tariffs_http_client: Annotated[TariffsHTTPClient, Depends(get_tariffs_http_client)],
         accounts_http_client: Annotated[AccountsHTTPClient, Depends(get_accounts_http_client)],
-        contracts_http_client: Annotated[ContractsHTTPClient, Depends(get_contracts_http_client)],
+        documents_kafka_producer_client: Annotated[
+            DocumentsKafkaProducerClient,
+            Depends(get_documents_kafka_producer_client)
+        ]
 ):
     return await open_credit_card_account(
         request=request,
         users_http_client=users_http_client,
         cards_http_client=cards_http_client,
-        tariffs_http_client=tariffs_http_client,
         accounts_http_client=accounts_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )

@@ -44,6 +44,7 @@ from contracts.services.gateway.operations.rpc_make_transfer_operation_pb2 impor
     MakeTransferOperationRequest,
     MakeTransferOperationResponse
 )
+from services.documents.clients.receipts.grpc import get_receipts_grpc_client
 from services.gateway.apps.operations.controllers.operations.grpc import make_fee_operation, make_top_up_operation, \
     make_cashback_operation, make_purchase_operation, make_transfer_operation, make_bill_payment_operation, \
     make_cash_withdrawal_operation, get_operation, get_operations, get_operations_summary, get_operation_receipt
@@ -78,7 +79,7 @@ class OperationsGatewayService(OperationsGatewayServiceServicer):
     ):
         return await get_operation_receipt(
             request=request,
-            operations_grpc_client=get_operations_grpc_client()
+            receipts_grpc_client=get_receipts_grpc_client()
         )
 
     async def GetOperationsSummary(

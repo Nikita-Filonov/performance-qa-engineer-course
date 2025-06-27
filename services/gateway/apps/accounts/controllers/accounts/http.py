@@ -7,8 +7,7 @@ from services.accounts.apps.accounts.schema.accounts import AccountSchema
 from services.accounts.clients.accounts.http import AccountsHTTPClient
 from services.cards.apps.cards.schema.cards import CardSchema
 from services.cards.clients.cards.http import CardsHTTPClient
-from services.documents.clients.contracts.http import ContractsHTTPClient
-from services.documents.clients.tariffs.http import TariffsHTTPClient
+from services.documents.services.kafka.producer import DocumentsKafkaProducerClient
 from services.gateway.apps.accounts.schema.accounts import (
     AccountViewSchema,
     GetAccountsQuerySchema,
@@ -81,29 +80,26 @@ async def create_cards_for_account(
 
 async def create_documents_for_account(
         account_id: uuid.UUID,
-        tariffs_http_client: TariffsHTTPClient,
-        contracts_http_client: ContractsHTTPClient
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ):
-    await tariffs_http_client.create_tariff(
-        account_id=account_id, content=fake.sentence().encode()
+    await documents_kafka_producer_client.produce_tariff_document(
+        account_id=str(account_id), content=fake.sentence().encode()
     )
-    await contracts_http_client.create_contract(
-        account_id=account_id, content=fake.sentence().encode()
+    await documents_kafka_producer_client.produce_contract_document(
+        account_id=str(account_id), content=fake.sentence().encode()
     )
 
 
 async def open_deposit_account(
         request: OpenDepositAccountRequestSchema,
-        tariffs_http_client: TariffsHTTPClient,
         accounts_http_client: AccountsHTTPClient,
-        contracts_http_client: ContractsHTTPClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenDepositAccountResponseSchema:
     create_account_response = await accounts_http_client.create_deposit_account(request.user_id)
 
     await create_documents_for_account(
         account_id=create_account_response.account.id,
-        tariffs_http_client=tariffs_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )
 
     return OpenDepositAccountResponseSchema(
@@ -113,16 +109,14 @@ async def open_deposit_account(
 
 async def open_savings_account(
         request: OpenSavingsAccountRequestSchema,
-        tariffs_http_client: TariffsHTTPClient,
         accounts_http_client: AccountsHTTPClient,
-        contracts_http_client: ContractsHTTPClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenSavingsAccountResponseSchema:
     create_account_response = await accounts_http_client.create_savings_account(request.user_id)
 
     await create_documents_for_account(
         account_id=create_account_response.account.id,
-        tariffs_http_client=tariffs_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )
 
     return OpenSavingsAccountResponseSchema(
@@ -134,9 +128,8 @@ async def open_debit_card_account(
         request: OpenDebitCardAccountRequestSchema,
         users_http_client: UsersHTTPClient,
         cards_http_client: CardsHTTPClient,
-        tariffs_http_client: TariffsHTTPClient,
         accounts_http_client: AccountsHTTPClient,
-        contracts_http_client: ContractsHTTPClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenDebitCardAccountResponseSchema:
     create_account_response = await accounts_http_client.create_debit_card_account(request.user_id)
     cards = await create_cards_for_account(
@@ -148,8 +141,7 @@ async def open_debit_card_account(
 
     await create_documents_for_account(
         account_id=create_account_response.account.id,
-        tariffs_http_client=tariffs_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client
     )
 
     return OpenDebitCardAccountResponseSchema(
@@ -161,9 +153,8 @@ async def open_credit_card_account(
         request: OpenCreditCardAccountRequestSchema,
         users_http_client: UsersHTTPClient,
         cards_http_client: CardsHTTPClient,
-        tariffs_http_client: TariffsHTTPClient,
         accounts_http_client: AccountsHTTPClient,
-        contracts_http_client: ContractsHTTPClient,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> OpenCreditCardAccountResponseSchema:
     create_account_response = await accounts_http_client.create_credit_card_account(request.user_id)
     cards = await create_cards_for_account(
@@ -175,8 +166,7 @@ async def open_credit_card_account(
 
     await create_documents_for_account(
         account_id=create_account_response.account.id,
-        tariffs_http_client=tariffs_http_client,
-        contracts_http_client=contracts_http_client
+        documents_kafka_producer_client=documents_kafka_producer_client,
     )
 
     return OpenCreditCardAccountResponseSchema(

@@ -4,6 +4,8 @@ from typing import Annotated
 from fastapi import Depends, APIRouter
 
 from libs.routes import APIRoutes
+from services.documents.apps.receipts.schema.receipts import GetReceiptResponseSchema
+from services.documents.clients.receipts.http import ReceiptsHTTPClient, get_receipts_http_client
 from services.gateway.apps.operations.controllers.operations.http import (
     get_operation,
     get_operations,
@@ -31,7 +33,6 @@ from services.operations.apps.operations.schema.operations.base import (
     GetOperationsQuerySchema,
     GetOperationsResponseSchema,
     CreateOperationResponseSchema,
-    GetOperationReceiptResponseSchema,
     GetOperationsSummaryQuerySchema,
     GetOperationsSummaryResponseSchema,
 )
@@ -70,15 +71,13 @@ async def get_operations_summary_view(
 
 @operations_gateway_router.get(
     '/operation-receipt/{operation_id}',
-    response_model=GetOperationReceiptResponseSchema
+    response_model=GetReceiptResponseSchema
 )
 async def get_operation_receipt_view(
         operation_id: uuid.UUID,
-        operations_http_client: Annotated[
-            OperationsHTTPClient, Depends(get_operations_http_client)
-        ],
+        receipts_http_client: Annotated[ReceiptsHTTPClient, Depends(get_receipts_http_client)],
 ):
-    return await get_operation_receipt(operation_id, operations_http_client)
+    return await get_operation_receipt(operation_id, receipts_http_client)
 
 
 @operations_gateway_router.get('/{operation_id}', response_model=GetOperationResponseSchema)
