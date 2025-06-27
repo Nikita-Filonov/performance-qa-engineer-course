@@ -10,6 +10,7 @@ from services.users.clients.users.grpc import get_users_grpc_client
 class UsersGatewayService(UsersGatewayServiceServicer):
     async def GetUser(self, request: GetUserRequest, context: ServicerContext) -> GetUserResponse:
         return await get_user(
+            context=context,
             request=request,
             users_grpc_client=get_users_grpc_client()
         )
