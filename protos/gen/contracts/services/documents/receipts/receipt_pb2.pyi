@@ -11,7 +11,7 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
-class OperationReceipt(google.protobuf.message.Message):
+class Receipt(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     URL_FIELD_NUMBER: builtins.int
@@ -26,4 +26,4 @@ class OperationReceipt(google.protobuf.message.Message):
     ) -> None: ...
     def ClearField(self, field_name: typing.Literal["document", b"document", "url", b"url"]) -> None: ...
 
-global___OperationReceipt = OperationReceipt
+global___Receipt = Receipt

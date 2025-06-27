@@ -4,7 +4,7 @@ isort:skip_file
 """
 
 import builtins
-import contracts.services.operations.operation_receipt_pb2
+import contracts.services.documents.receipts.receipt_pb2
 import google.protobuf.descriptor
 import google.protobuf.message
 import typing
@@ -12,33 +12,36 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
-class GetOperationReceiptRequest(google.protobuf.message.Message):
+class CreateReceiptRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     OPERATION_ID_FIELD_NUMBER: builtins.int
+    CONTENT_FIELD_NUMBER: builtins.int
     operation_id: builtins.str
+    content: builtins.bytes
     def __init__(
         self,
         *,
         operation_id: builtins.str = ...,
+        content: builtins.bytes = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["operation_id", b"operation_id"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["content", b"content", "operation_id", b"operation_id"]) -> None: ...
 
-global___GetOperationReceiptRequest = GetOperationReceiptRequest
+global___CreateReceiptRequest = CreateReceiptRequest
 
 @typing.final
-class GetOperationReceiptResponse(google.protobuf.message.Message):
+class CreateReceiptResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     RECEIPT_FIELD_NUMBER: builtins.int
     @property
-    def receipt(self) -> contracts.services.operations.operation_receipt_pb2.OperationReceipt: ...
+    def receipt(self) -> contracts.services.documents.receipts.receipt_pb2.Receipt: ...
     def __init__(
         self,
         *,
-        receipt: contracts.services.operations.operation_receipt_pb2.OperationReceipt | None = ...,
+        receipt: contracts.services.documents.receipts.receipt_pb2.Receipt | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["receipt", b"receipt"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing.Literal["receipt", b"receipt"]) -> None: ...
 
-global___GetOperationReceiptResponse = GetOperationReceiptResponse
+global___CreateReceiptResponse = CreateReceiptResponse

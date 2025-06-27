@@ -38,7 +38,7 @@ class CardsGatewayServiceStub(object):
         self.IssueVirtualCard = channel.unary_unary(
                 '/contracts.services.gateway.cards.CardsGatewayService/IssueVirtualCard',
                 request_serializer=contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardRequest.SerializeToString,
-                response_deserializer=contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardRequest.FromString,
+                response_deserializer=contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardResponse.FromString,
                 _registered_method=True)
         self.IssuePhysicalCard = channel.unary_unary(
                 '/contracts.services.gateway.cards.CardsGatewayService/IssuePhysicalCard',
@@ -68,7 +68,7 @@ def add_CardsGatewayServiceServicer_to_server(servicer, server):
             'IssueVirtualCard': grpc.unary_unary_rpc_method_handler(
                     servicer.IssueVirtualCard,
                     request_deserializer=contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardRequest.FromString,
-                    response_serializer=contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardRequest.SerializeToString,
+                    response_serializer=contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardResponse.SerializeToString,
             ),
             'IssuePhysicalCard': grpc.unary_unary_rpc_method_handler(
                     servicer.IssuePhysicalCard,
@@ -102,7 +102,7 @@ class CardsGatewayService(object):
             target,
             '/contracts.services.gateway.cards.CardsGatewayService/IssueVirtualCard',
             contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardRequest.SerializeToString,
-            contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardRequest.FromString,
+            contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2.IssueVirtualCardResponse.FromString,
             options,
             channel_credentials,
             insecure,

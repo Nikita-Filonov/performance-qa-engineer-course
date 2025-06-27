@@ -5,13 +5,11 @@ package contracts.services.operations;
 import "contracts/services/operations/rpc_get_operation.proto";
 import "contracts/services/operations/rpc_get_operations.proto";
 import "contracts/services/operations/rpc_create_operation.proto";
-import "contracts/services/operations/rpc_get_operation_receipt.proto";
 import "contracts/services/operations/rpc_get_operations_summary.proto";
 
 service OperationsService {
   rpc GetOperation (GetOperationRequest) returns (GetOperationResponse);
   rpc GetOperations (GetOperationsRequest) returns (GetOperationsResponse);
   rpc CreateOperation (CreateOperationRequest) returns (CreateOperationResponse);
-  rpc GetOperationReceipt (GetOperationReceiptRequest) returns (GetOperationReceiptResponse);
   rpc GetOperationsSummary (GetOperationsSummaryRequest) returns (GetOperationsSummaryResponse);
 }

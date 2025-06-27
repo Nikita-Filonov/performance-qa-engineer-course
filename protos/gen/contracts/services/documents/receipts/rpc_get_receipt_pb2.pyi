@@ -12,7 +12,7 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
-class GetOperationReceiptRequest(google.protobuf.message.Message):
+class GetReceiptRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     OPERATION_ID_FIELD_NUMBER: builtins.int
@@ -24,10 +24,10 @@ class GetOperationReceiptRequest(google.protobuf.message.Message):
     ) -> None: ...
     def ClearField(self, field_name: typing.Literal["operation_id", b"operation_id"]) -> None: ...
 
-global___GetOperationReceiptRequest = GetOperationReceiptRequest
+global___GetReceiptRequest = GetReceiptRequest
 
 @typing.final
-class GetOperationReceiptResponse(google.protobuf.message.Message):
+class GetReceiptResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     RECEIPT_FIELD_NUMBER: builtins.int
@@ -41,4 +41,4 @@ class GetOperationReceiptResponse(google.protobuf.message.Message):
     def HasField(self, field_name: typing.Literal["receipt", b"receipt"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing.Literal["receipt", b"receipt"]) -> None: ...
 
-global___GetOperationReceiptResponse = GetOperationReceiptResponse
+global___GetReceiptResponse = GetReceiptResponse

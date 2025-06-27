@@ -6,6 +6,6 @@ import "contracts/services/gateway/cards/rpc_issue_virtual_card.proto";
 import "contracts/services/gateway/cards/rpc_issue_physical_card.proto";
 
 service CardsGatewayService {
-  rpc IssueVirtualCard (IssueVirtualCardRequest) returns (IssueVirtualCardRequest);
+  rpc IssueVirtualCard (IssueVirtualCardRequest) returns (IssueVirtualCardResponse);
   rpc IssuePhysicalCard (IssuePhysicalCardRequest) returns (IssuePhysicalCardResponse);
 }

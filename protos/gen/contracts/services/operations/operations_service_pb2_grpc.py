@@ -5,7 +5,6 @@ import warnings
 
 from contracts.services.operations import rpc_create_operation_pb2 as contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2
 from contracts.services.operations import rpc_get_operation_pb2 as contracts_dot_services_dot_operations_dot_rpc__get__operation__pb2
-from contracts.services.operations import rpc_get_operation_receipt_pb2 as contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2
 from contracts.services.operations import rpc_get_operations_pb2 as contracts_dot_services_dot_operations_dot_rpc__get__operations__pb2
 from contracts.services.operations import rpc_get_operations_summary_pb2 as contracts_dot_services_dot_operations_dot_rpc__get__operations__summary__pb2
 
@@ -53,11 +52,6 @@ class OperationsServiceStub(object):
                 request_serializer=contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2.CreateOperationRequest.SerializeToString,
                 response_deserializer=contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2.CreateOperationResponse.FromString,
                 _registered_method=True)
-        self.GetOperationReceipt = channel.unary_unary(
-                '/contracts.services.operations.OperationsService/GetOperationReceipt',
-                request_serializer=contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2.GetOperationReceiptRequest.SerializeToString,
-                response_deserializer=contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2.GetOperationReceiptResponse.FromString,
-                _registered_method=True)
         self.GetOperationsSummary = channel.unary_unary(
                 '/contracts.services.operations.OperationsService/GetOperationsSummary',
                 request_serializer=contracts_dot_services_dot_operations_dot_rpc__get__operations__summary__pb2.GetOperationsSummaryRequest.SerializeToString,
@@ -86,12 +80,6 @@ class OperationsServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetOperationReceipt(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def GetOperationsSummary(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -115,11 +103,6 @@ def add_OperationsServiceServicer_to_server(servicer, server):
                     servicer.CreateOperation,
                     request_deserializer=contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2.CreateOperationRequest.FromString,
                     response_serializer=contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2.CreateOperationResponse.SerializeToString,
-            ),
-            'GetOperationReceipt': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetOperationReceipt,
-                    request_deserializer=contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2.GetOperationReceiptRequest.FromString,
-                    response_serializer=contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2.GetOperationReceiptResponse.SerializeToString,
             ),
             'GetOperationsSummary': grpc.unary_unary_rpc_method_handler(
                     servicer.GetOperationsSummary,
@@ -208,33 +191,6 @@ class OperationsService(object):
             '/contracts.services.operations.OperationsService/CreateOperation',
             contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2.CreateOperationRequest.SerializeToString,
             contracts_dot_services_dot_operations_dot_rpc__create__operation__pb2.CreateOperationResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetOperationReceipt(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/contracts.services.operations.OperationsService/GetOperationReceipt',
-            contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2.GetOperationReceiptRequest.SerializeToString,
-            contracts_dot_services_dot_operations_dot_rpc__get__operation__receipt__pb2.GetOperationReceiptResponse.FromString,
             options,
             channel_credentials,
             insecure,

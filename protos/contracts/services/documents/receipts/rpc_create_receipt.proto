@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package contracts.services.documents.receipts;
+
+import "contracts/services/documents/receipts/receipt.proto";
+
+message CreateReceiptRequest {
+  string operation_id = 1;
+  bytes content = 2;
+}
+
+message CreateReceiptResponse {
+  Receipt receipt = 1;
+}

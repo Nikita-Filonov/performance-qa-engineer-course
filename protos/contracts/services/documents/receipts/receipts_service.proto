@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package contracts.services.documents.receipts;
+
+import "contracts/services/documents/receipts/rpc_get_receipt.proto";
+import "contracts/services/documents/receipts/rpc_create_receipt.proto";
+
+service ReceiptsService {
+  rpc GetReceipt (GetReceiptRequest) returns (GetReceiptResponse);
+  rpc CreateReceipt (CreateReceiptRequest) returns (CreateReceiptResponse);
+}
+
