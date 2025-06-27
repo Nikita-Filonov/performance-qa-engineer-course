@@ -2,15 +2,10 @@ from datetime import datetime
 
 from config import settings
 from contracts.services.operations.operation_pb2 import Operation, OperationType, OperationStatus
-from contracts.services.operations.operation_receipt_pb2 import OperationReceipt
 from contracts.services.operations.operations_service_pb2_grpc import OperationsServiceStub
 from contracts.services.operations.operations_summary_pb2 import OperationsSummary
 from contracts.services.operations.rpc_create_operation_pb2 import CreateOperationRequest, CreateOperationResponse
 from contracts.services.operations.rpc_get_operation_pb2 import GetOperationRequest, GetOperationResponse
-from contracts.services.operations.rpc_get_operation_receipt_pb2 import (
-    GetOperationReceiptRequest,
-    GetOperationReceiptResponse
-)
 from contracts.services.operations.rpc_get_operations_pb2 import GetOperationsRequest, GetOperationsResponse
 from contracts.services.operations.rpc_get_operations_summary_pb2 import (
     GetOperationsSummaryRequest,
@@ -34,9 +29,6 @@ class OperationsGRPCClient(GRPCClient):
 
     async def create_operation_api(self, request: CreateOperationRequest) -> CreateOperationResponse:
         return await self.stub.CreateOperation(request)
-
-    async def get_operation_receipt_api(self, request: GetOperationReceiptRequest) -> GetOperationReceiptResponse:
-        return await self.stub.GetOperationReceipt(request)
 
     async def get_operations_summary_api(self, request: GetOperationsSummaryRequest) -> GetOperationsSummaryResponse:
         return await self.stub.GetOperationsSummary(request)
@@ -184,11 +176,6 @@ class OperationsGRPCClient(GRPCClient):
         )
         response = await self.create_operation_api(request)
         return response.operation
-
-    async def get_operation_receipt(self, operation_id: str) -> OperationReceipt:
-        request = GetOperationReceiptRequest(operation_id=operation_id)
-        response = await self.get_operation_receipt_api(request)
-        return response.receipt
 
     async def get_operations_summary(self, account_id: str) -> OperationsSummary:
         request = GetOperationsSummaryRequest(account_id=account_id)

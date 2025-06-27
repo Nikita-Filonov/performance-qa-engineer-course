@@ -8,14 +8,9 @@ from contracts.services.operations.operation_pb2 import (
     OperationType as ProtoOperationType,
     OperationStatus as ProtoOperationStatus
 )
-from contracts.services.operations.operation_receipt_pb2 import OperationReceipt
 from contracts.services.operations.operations_summary_pb2 import OperationsSummary
 from contracts.services.operations.rpc_create_operation_pb2 import CreateOperationRequest, CreateOperationResponse
 from contracts.services.operations.rpc_get_operation_pb2 import GetOperationRequest, GetOperationResponse
-from contracts.services.operations.rpc_get_operation_receipt_pb2 import (
-    GetOperationReceiptRequest,
-    GetOperationReceiptResponse
-)
 from contracts.services.operations.rpc_get_operations_pb2 import GetOperationsRequest, GetOperationsResponse
 from contracts.services.operations.rpc_get_operations_summary_pb2 import (
     GetOperationsSummaryRequest,
@@ -25,9 +20,9 @@ from contracts.services.payments.payment_pb2 import PaymentStatus
 from libs.base.date import from_proto_datetime, to_proto_datetime
 from services.accounts.clients.accounts.grpc import AccountsGRPCClient
 from services.cards.clients.cards.grpc import CardsGRPCClient
+from services.documents.services.kafka.producer import DocumentsKafkaProducerClient
 from services.operations.services.postgres.models.operations import OperationType, OperationStatus, OperationsModel
 from services.operations.services.postgres.repositories.operations import OperationsRepository, CreateOperationDict
-from services.operations.services.s3.client import OperationsS3Client
 from services.payments.clients.payments.grpc import PaymentsGRPCClient
 
 MAP_OPERATION_TYPE_TO_PROTO = OperationType.to_proto_map(ProtoOperationType)
@@ -81,8 +76,8 @@ async def create_operation(
         cards_grpc_client: CardsGRPCClient,
         payments_grpc_client: PaymentsGRPCClient,
         accounts_grpc_client: AccountsGRPCClient,
-        operations_s3_client: OperationsS3Client,
         operations_repository: OperationsRepository,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> CreateOperationResponse:
     try:
         card = await cards_grpc_client.get_card(request.card_id)
@@ -131,32 +126,12 @@ async def create_operation(
             balance=account.balance + request.amount,
             account_id=account.id
         )
-        await operations_s3_client.upload_operation_receipt_file(
-            data=str(operation.id).encode(),
+        await documents_kafka_producer_client.produce_receipt_document(
+            content=str(operation.id).encode(),
             operation_id=operation.id
         )
 
     return CreateOperationResponse(operation=build_operation_from_model(operation))
-
-
-async def get_operation_receipt(
-        context: ServicerContext,
-        request: GetOperationReceiptRequest,
-        operations_s3_client: OperationsS3Client,
-        operations_repository: OperationsRepository,
-) -> GetOperationReceiptResponse:
-    operation = await operations_repository.get_by_id(uuid.UUID(request.operation_id))
-    if not operation:
-        await context.abort(
-            code=StatusCode.NOT_FOUND,
-            details=f"Operation with id {request.id} not found"
-        )
-
-    file = await operations_s3_client.get_operation_receipt_file(operation.id)
-
-    return GetOperationReceiptResponse(
-        receipt=OperationReceipt(url=file.url, document=file.content)
-    )
 
 
 async def get_operations_summary(

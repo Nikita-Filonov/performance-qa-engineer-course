@@ -7,7 +7,6 @@ from pydantic import UUID4
 from libs.schema.base import BaseSchema
 from libs.schema.query import QuerySchema
 from services.operations.apps.operations.schema.operations.operation import OperationSchema
-from services.operations.apps.operations.schema.operations.operation_receipt import OperationReceiptSchema
 from services.operations.apps.operations.schema.operations.operations_summary import OperationsSummarySchema
 from services.operations.services.postgres.models.operations import OperationType, OperationStatus
 
@@ -40,10 +39,6 @@ class CreateOperationRequestSchema(BaseSchema):
 
 class CreateOperationResponseSchema(BaseSchema):
     operation: OperationSchema
-
-
-class GetOperationReceiptResponseSchema(BaseSchema):
-    receipt: OperationReceiptSchema
 
 
 class GetOperationsSummaryQuerySchema(QuerySchema):

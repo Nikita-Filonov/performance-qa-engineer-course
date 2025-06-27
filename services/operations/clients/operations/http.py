@@ -14,7 +14,6 @@ from services.operations.apps.operations.schema.operations.base import (
     GetOperationsResponseSchema,
     CreateOperationRequestSchema,
     CreateOperationResponseSchema,
-    GetOperationReceiptResponseSchema,
     GetOperationsSummaryQuerySchema,
     GetOperationsSummaryResponseSchema,
 )
@@ -43,10 +42,6 @@ class OperationsHTTPClient(HTTPClient):
         return await self.post(
             APIRoutes.OPERATIONS, json=request.model_dump(mode='json', by_alias=True)
         )
-
-    @handle_http_error(client='OperationsHTTPClient', exception=OperationsHTTPClientError)
-    async def get_operation_receipt_api(self, operation_id: uuid.UUID) -> Response:
-        return await self.get(f'{APIRoutes.OPERATIONS}/operation-receipt/{operation_id}')
 
     @handle_http_error(client='OperationsHTTPClient', exception=OperationsHTTPClientError)
     async def get_operations_summary_api(self, query: GetOperationsSummaryQuerySchema) -> Response:
@@ -197,13 +192,6 @@ class OperationsHTTPClient(HTTPClient):
         )
         response = await self.create_operation_api(request)
         return CreateOperationResponseSchema.model_validate_json(response.text)
-
-    async def get_operation_receipt(
-            self,
-            operation_id: uuid.UUID
-    ) -> GetOperationReceiptResponseSchema:
-        response = await self.get_operation_receipt_api(operation_id)
-        return GetOperationReceiptResponseSchema.model_validate_json(response.text)
 
     async def get_operations_summary(
             self,

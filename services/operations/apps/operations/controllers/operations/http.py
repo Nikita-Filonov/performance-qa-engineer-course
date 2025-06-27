@@ -1,26 +1,23 @@
 import uuid
 
 from fastapi import HTTPException, status
-from pydantic import HttpUrl
 
 from services.accounts.clients.accounts.http import AccountsHTTPClient, AccountsHTTPClientError
 from services.cards.clients.cards.http import CardsHTTPClient, CardsHTTPClientError
+from services.documents.services.kafka.producer import DocumentsKafkaProducerClient
 from services.operations.apps.operations.schema.operations.base import (
     GetOperationResponseSchema,
     GetOperationsQuerySchema,
     GetOperationsResponseSchema,
     CreateOperationRequestSchema,
     CreateOperationResponseSchema,
-    GetOperationReceiptResponseSchema,
     GetOperationsSummaryQuerySchema,
     GetOperationsSummaryResponseSchema,
 )
 from services.operations.apps.operations.schema.operations.operation import OperationSchema
-from services.operations.apps.operations.schema.operations.operation_receipt import OperationReceiptSchema
 from services.operations.apps.operations.schema.operations.operations_summary import OperationsSummarySchema
 from services.operations.services.postgres.models.operations import OperationStatus
 from services.operations.services.postgres.repositories.operations import OperationsRepository, CreateOperationDict
-from services.operations.services.s3.client import OperationsS3Client
 from services.payments.apps.payments.schema.payments import PaymentStatus
 from services.payments.clients.payments.http import PaymentsHTTPClient
 
@@ -55,8 +52,8 @@ async def create_operation(
         cards_http_client: CardsHTTPClient,
         payments_http_client: PaymentsHTTPClient,
         accounts_http_client: AccountsHTTPClient,
-        operations_s3_client: OperationsS3Client,
         operations_repository: OperationsRepository,
+        documents_kafka_producer_client: DocumentsKafkaProducerClient
 ) -> CreateOperationResponseSchema:
     try:
         get_card_response = await cards_http_client.get_card(request.card_id)
@@ -105,31 +102,12 @@ async def create_operation(
             balance=get_account_response.account.balance + request.amount,
             account_id=get_account_response.account.id
         )
-        await operations_s3_client.upload_operation_receipt_file(
-            data=str(operation.id).encode(),
+        await documents_kafka_producer_client.produce_receipt_document(
+            content=str(operation.id).encode(),
             operation_id=operation.id
         )
 
     return CreateOperationResponseSchema(operation=OperationSchema.model_validate(operation))
-
-
-async def get_operation_receipt(
-        operation_id: uuid.UUID,
-        operations_s3_client: OperationsS3Client,
-        operations_repository: OperationsRepository,
-) -> GetOperationReceiptResponseSchema:
-    operation = await operations_repository.get_by_id(operation_id)
-    if not operation:
-        raise HTTPException(
-            detail=f"Operation with id {operation_id} not found",
-            status_code=status.HTTP_404_NOT_FOUND
-        )
-
-    file = await operations_s3_client.get_operation_receipt_file(operation.id)
-
-    return GetOperationReceiptResponseSchema(
-        receipt=OperationReceiptSchema(url=HttpUrl(file.url), document=file.content)
-    )
 
 
 async def get_operations_summary(
