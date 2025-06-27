@@ -51,21 +51,33 @@ class DocumentsKafkaProducerClient(KafkaProducerClient):
             content=content,
             account_id=account_id
         )
-        await self.produce_tariff_document_api(message)
+
+        try:
+            await self.produce_tariff_document_api(message)
+        except Exception as error:
+            self.logger.error(f"Failed to produce tariff document message to kafka: {error}")
 
     async def produce_receipt_document(self, content: bytes, operation_id: str):
         message = ReceiptDocumentMessage(
             content=content,
             operation_id=operation_id
         )
-        await self.produce_receipt_document_api(message)
+
+        try:
+            await self.produce_receipt_document_api(message)
+        except Exception as error:
+            self.logger.error(f"Failed to produce receipt document message to kafka: {error}")
 
     async def produce_contract_document(self, content: bytes, account_id: str):
         message = ContractDocumentMessage(
             content=content,
             account_id=account_id
         )
-        await self.produce_contract_document_api(message)
+
+        try:
+            await self.produce_contract_document_api(message)
+        except Exception as error:
+            self.logger.error(f"Failed to produce contract document message to kafka: {error}")
 
 
 def get_documents_kafka_producer_client() -> DocumentsKafkaProducerClient:
