@@ -3,9 +3,6 @@ from pydantic import EmailStr, UUID4
 from libs.schema.base import BaseSchema
 
 
-# TODO добавить редис можно для например документов. Чтобы каждый раз не ходить за ними
-
-
 class UserSchema(BaseSchema):
     id: UUID4
     email: EmailStr
