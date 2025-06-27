@@ -30,7 +30,7 @@ async def create_user(
         users_grpc_client: UsersGRPCClient
 ) -> CreateUserResponse:
     try:
-        email = validate_email(request.email)
+        email = validate_email(request.email, test_environment=True)
     except (EmailSyntaxError, EmailNotValidError) as error:
         await context.abort(
             code=StatusCode.INVALID_ARGUMENT,
