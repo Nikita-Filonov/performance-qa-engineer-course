@@ -9,6 +9,8 @@ x-base-service: &base-service
 x-python-service: &python-service
   <<: *base-service
   entrypoint: [ "python", "-u", "-m" ]
+  environment:
+    ENV_FILE: .env
 
 services:
   # minio
