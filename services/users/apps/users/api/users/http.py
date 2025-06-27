@@ -5,8 +5,11 @@ from fastapi import APIRouter, Depends
 
 from libs.routes import APIRoutes
 from services.users.apps.users.controllers.users.http import get_user, create_user
-from services.users.apps.users.schema.users import GetUserResponseSchema, CreateUserRequestSchema, \
+from services.users.apps.users.schema.users import (
+    GetUserResponseSchema,
+    CreateUserRequestSchema,
     CreateUserResponseSchema
+)
 from services.users.services.postgres.repositories.users import UsersRepository, get_users_repository_depends
 
 users_router = APIRouter(
