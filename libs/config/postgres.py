@@ -1,7 +1,9 @@
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel, SecretStr, ConfigDict
 
 
 class PostgresConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     port: int = 5432
     host: str
     driver: str
