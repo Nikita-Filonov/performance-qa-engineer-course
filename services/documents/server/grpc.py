@@ -12,7 +12,7 @@ from contracts.services.documents.tariffs import tariffs_service_pb2_grpc
 from libs.grpc.server.base import build_grpc_server
 from libs.logger import get_logger
 from services.documents.apps.contracts.api.contracts.grpc import ContractsService
-from services.documents.apps.receipts.api.tariffs.grpc import ReceiptsService
+from services.documents.apps.receipts.api.receipts.grpc import ReceiptsService
 from services.documents.apps.tariffs.api.tariffs.grpc import TariffsService
 
 
