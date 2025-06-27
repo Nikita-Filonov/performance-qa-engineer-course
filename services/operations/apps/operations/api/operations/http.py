@@ -48,7 +48,7 @@ async def get_operations_view(
     '/operations-summary',
     response_model=GetOperationsSummaryResponseSchema
 )
-async def get_operation_receipt_view(
+async def get_operations_summary_view(
         query: Annotated[
             GetOperationsSummaryQuerySchema, Depends(GetOperationsSummaryQuerySchema.as_query)
         ],
