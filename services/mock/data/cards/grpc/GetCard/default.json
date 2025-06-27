@@ -1,0 +1,14 @@
+{
+  "card": {
+    "id": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+    "pin": "123",
+    "cvv": "321",
+    "type": "CARD_TYPE_PHYSICAL",
+    "status": "CARD_STATUS_ACTIVE",
+    "accountId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+    "cardNumber": "0000000000000000",
+    "cardHolder": "Alise Smith",
+    "expiryDate": "2029-06-27",
+    "paymentSystem": "CARD_PAYMENT_SYSTEM_MASTERCARD"
+  }
+}

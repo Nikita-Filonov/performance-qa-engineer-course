@@ -1,0 +1,6 @@
+{
+  "receipt": {
+    "url": "http://localhost:3000/receipt/document.pdf",
+    "document": "cmVjZWlwdC1kb2N1bWVudA=="
+  }
+}

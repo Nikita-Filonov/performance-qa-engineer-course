@@ -1,0 +1,6 @@
+{
+  "tariff": {
+    "url": "http://localhost:3000/tariff/document.pdf",
+    "document": "dGFyaWZmLWRvY3VtZW50"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "operations": [
+    {
+      "id": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+      "type": "OPERATION_TYPE_PURCHASE",
+      "status": "OPERATION_STATUS_COMPLETED",
+      "amount": -77.99,
+      "cardId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+      "category": "taxi",
+      "createdAt": "2025-06-27T16:50:06.374Z",
+      "accountId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9"
+    },
+    {
+      "id": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+      "type": "OPERATION_TYPE_TOP_UP",
+      "status": "OPERATION_STATUS_IN_PROGRESS",
+      "amount": 1799.57,
+      "cardId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+      "category": "money_in",
+      "createdAt": "2025-06-27T16:50:06.374Z",
+      "accountId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9"
+    },
+    {
+      "id": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+      "type": "OPERATION_TYPE_TRANSFER",
+      "status": "OPERATION_STATUS_FAILED",
+      "amount": -13.55,
+      "cardId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9",
+      "category": "transfer",
+      "createdAt": "2025-06-27T16:50:06.374Z",
+      "accountId": "b12d5d3c-93cb-45f3-98fb-49b68cfbf9d9"
+    }
+  ]
+}
