@@ -2,8 +2,6 @@ version: '3.9'
 
 x-base-service: &base-service
   image: base-service
-  volumes:
-    - .:/app
   working_dir: /app
 
 x-python-service: &python-service
