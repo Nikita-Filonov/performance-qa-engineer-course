@@ -5,12 +5,12 @@ x-base-service: &base-service
   volumes:
     - .:/app
   working_dir: /app
+  environment:
+    ENV_FILE: .env.ci
 
 x-python-service: &python-service
   <<: *base-service
   entrypoint: [ "python", "-u", "-m" ]
-  environment:
-    ENV_FILE: .env.ci
 
 services:
   # mock-service
