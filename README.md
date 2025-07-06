@@ -80,6 +80,10 @@ By default, services will be available at:
 - MinIO: http://localhost:3000
 - Postgres Admin: http://localhost:5050
 
+## Architecture
+
+![Architecture](./docs/architecture/core.png)
+
 ## Notes
 
 - The stand is not intended for production use.
