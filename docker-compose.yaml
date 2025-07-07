@@ -84,7 +84,8 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./migrations/postgres:/docker-entrypoint-initdb.d
-    command: [ "bash", "./scripts/postgres.sh" ]
+    command: >
+      bash -c "apt-get update && apt-get install -y dos2unix && dos2unix /scripts/postgres.sh && bash /scripts/postgres.sh"
     depends_on: [ "postgres" ]
     environment:
       PGPASSWORD: root
