@@ -172,6 +172,14 @@ services:
     restart: always
     container_name: prometheus
 
+  docker-exporter:
+    image: quay.io/prometheuscommunity/docker-stats-exporter
+    container_name: docker-exporter
+    ports:
+      - "9323:9323"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   # users-service
   http-users:
     <<: *python-service
