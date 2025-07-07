@@ -172,12 +172,6 @@ services:
     restart: always
     container_name: prometheus
 
-  node-exporter:
-    image: prom/node-exporter
-    ports: [ "9100:9100" ]
-    restart: always
-    container_name: node-exporter
-
   # users-service
   http-users:
     <<: *python-service
