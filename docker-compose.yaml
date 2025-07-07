@@ -173,10 +173,12 @@ services:
     container_name: prometheus
 
   docker-stats-exporter:
-    image: dockerstats/docker-stats-exporter
+    image: ghcr.io/bosondata/docker-stats-exporter:latest
     ports: [ "9487:9487" ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    container_name: docker-stats-exporter
 
   # users-service
   http-users:
