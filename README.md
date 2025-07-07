@@ -77,7 +77,7 @@ By default, services will be available at:
 - gRPC gateway: localhost:9003
 - Grafana: http://localhost:3002
 - Kafka UI: http://localhost:8081
-- MinIO: http://localhost:3000
+- MinIO: http://localhost:3001
 - Postgres Admin: http://localhost:5050
 
 ## Architecture
