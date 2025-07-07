@@ -172,13 +172,11 @@ services:
     restart: always
     container_name: prometheus
 
-  docker-stats-exporter:
-    image: ghcr.io/bosondata/docker-stats-exporter:latest
-    ports: [ "9487:9487" ]
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
-    container_name: docker-stats-exporter
+  node-exporter:
+    image: prom/node-exporter
+    ports: [ "9100:9100" ]
+    restart: always
+    container_name: node-exporter
 
   # users-service
   http-users:
