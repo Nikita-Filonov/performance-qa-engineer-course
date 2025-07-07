@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-until psql -h postgres -U root -c '\q'; do
+until psql -h postgres -U root -d postgres -c '\q'; do
   echo "Waiting for Postgres..."
   sleep 2
 done
