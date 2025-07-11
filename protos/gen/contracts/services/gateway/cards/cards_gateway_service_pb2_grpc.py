@@ -6,7 +6,7 @@ import warnings
 from contracts.services.gateway.cards import rpc_issue_physical_card_pb2 as contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__physical__card__pb2
 from contracts.services.gateway.cards import rpc_issue_virtual_card_pb2 as contracts_dot_services_dot_gateway_dot_cards_dot_rpc__issue__virtual__card__pb2
 
-GRPC_GENERATED_VERSION = '1.73.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

@@ -15,7 +15,7 @@ from contracts.services.gateway.operations import rpc_make_purchase_operation_pb
 from contracts.services.gateway.operations import rpc_make_top_up_operation_pb2 as contracts_dot_services_dot_gateway_dot_operations_dot_rpc__make__top__up__operation__pb2
 from contracts.services.gateway.operations import rpc_make_transfer_operation_pb2 as contracts_dot_services_dot_gateway_dot_operations_dot_rpc__make__transfer__operation__pb2
 
-GRPC_GENERATED_VERSION = '1.73.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

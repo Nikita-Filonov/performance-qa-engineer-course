@@ -9,7 +9,7 @@ from contracts.services.gateway.accounts import rpc_open_debit_card_account_pb2 
 from contracts.services.gateway.accounts import rpc_open_deposit_account_pb2 as contracts_dot_services_dot_gateway_dot_accounts_dot_rpc__open__deposit__account__pb2
 from contracts.services.gateway.accounts import rpc_open_savings_account_pb2 as contracts_dot_services_dot_gateway_dot_accounts_dot_rpc__open__savings__account__pb2
 
-GRPC_GENERATED_VERSION = '1.73.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

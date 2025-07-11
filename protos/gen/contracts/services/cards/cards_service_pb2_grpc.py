@@ -7,7 +7,7 @@ from contracts.services.cards import rpc_create_card_pb2 as contracts_dot_servic
 from contracts.services.cards import rpc_get_card_pb2 as contracts_dot_services_dot_cards_dot_rpc__get__card__pb2
 from contracts.services.cards import rpc_get_cards_pb2 as contracts_dot_services_dot_cards_dot_rpc__get__cards__pb2
 
-GRPC_GENERATED_VERSION = '1.73.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

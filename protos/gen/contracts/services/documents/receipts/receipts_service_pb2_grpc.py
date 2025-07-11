@@ -6,7 +6,7 @@ import warnings
 from contracts.services.documents.receipts import rpc_create_receipt_pb2 as contracts_dot_services_dot_documents_dot_receipts_dot_rpc__create__receipt__pb2
 from contracts.services.documents.receipts import rpc_get_receipt_pb2 as contracts_dot_services_dot_documents_dot_receipts_dot_rpc__get__receipt__pb2
 
-GRPC_GENERATED_VERSION = '1.73.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

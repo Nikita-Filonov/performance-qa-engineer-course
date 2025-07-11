@@ -8,7 +8,7 @@ from contracts.services.accounts import rpc_get_account_pb2 as contracts_dot_ser
 from contracts.services.accounts import rpc_get_accounts_pb2 as contracts_dot_services_dot_accounts_dot_rpc__get__accounts__pb2
 from contracts.services.accounts import rpc_update_account_balance_pb2 as contracts_dot_services_dot_accounts_dot_rpc__update__account__balance__pb2
 
-GRPC_GENERATED_VERSION = '1.73.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
