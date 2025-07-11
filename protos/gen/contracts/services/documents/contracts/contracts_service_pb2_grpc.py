@@ -6,7 +6,7 @@ import warnings
 from contracts.services.documents.contracts import rpc_create_contract_pb2 as contracts_dot_services_dot_documents_dot_contracts_dot_rpc__create__contract__pb2
 from contracts.services.documents.contracts import rpc_get_contract_pb2 as contracts_dot_services_dot_documents_dot_contracts_dot_rpc__get__contract__pb2
 
-GRPC_GENERATED_VERSION = '1.71.0'
+GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

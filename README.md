@@ -50,7 +50,7 @@ cd performance-qa-engineer-course
 This project uses `.proto` files to define gRPC services and gateway interfaces.
 
 ```bash
-./scripts/proto.sh
+./scripts/protos.sh
 ```
 
 > Make sure you have protoc and necessary plugins installed. See [scripts/proto.sh](./scripts/protos.sh) for details.

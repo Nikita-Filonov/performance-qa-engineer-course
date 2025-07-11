@@ -7,7 +7,7 @@ from contracts.services.payments import rpc_authorize_payment_pb2 as contracts_d
 from contracts.services.payments import rpc_capture_payment_pb2 as contracts_dot_services_dot_payments_dot_rpc__capture__payment__pb2
 from contracts.services.payments import rpc_refund_payment_pb2 as contracts_dot_services_dot_payments_dot_rpc__refund__payment__pb2
 
-GRPC_GENERATED_VERSION = '1.71.0'
+GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
